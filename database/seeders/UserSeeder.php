@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,13 @@ class UserSeeder extends Seeder
             ['name' => 'Dana', 'nip' => '1236', 'password' => Hash::make('123456'), 'job_title' => 'Staff'],
         ];
 
-        DB::table('users')->insert($users);
+        $direktur = User::create($users[0]);
+        $direktur->syncRoles('direktur');
+
+        $direktur = User::create($users[1]);
+        $direktur->syncRoles('finance');
+
+        $direktur = User::create($users[2]);
+        $direktur->syncRoles('staff');
     }
 }

@@ -12,7 +12,7 @@ class ReimburshmentController extends Controller
      */
     public function index()
     {
-        //
+        return view('reimburshment.index');
     }
 
     /**

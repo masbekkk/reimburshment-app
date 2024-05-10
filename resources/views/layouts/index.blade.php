@@ -56,7 +56,7 @@
     </div>
 
     <!--  Mobilenavbar -->
-    {{-- @include('layouts.components.mobile-navbar') --}}
+    @include('layouts.components.mobile-navbar')
 
     <!--  Search Bar -->
     @include('layouts.components.search-bar')

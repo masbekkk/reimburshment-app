@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReimburshmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('layouts.index');
 });
+
+Route::resource('reimburshment', ReimburshmentController::class);
 
 require __DIR__.'/auth.php';
