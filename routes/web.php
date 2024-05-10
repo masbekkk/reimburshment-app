@@ -18,6 +18,9 @@ Route::get('/', function () {
     return view('layouts.index');
 });
 
-Route::resource('reimburshment', ReimburshmentController::class);
+Route::middleware('auth')->group(function () {
+    Route::resource('reimburshment', ReimburshmentController::class);
+    Route::get('get-reimburshment', [ReimburshmentController::class, 'getReimburshment'])->name('reimburshment.get-data');
+});
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

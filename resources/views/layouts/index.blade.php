@@ -13,6 +13,7 @@
     <meta name="author" content="" />
     <meta name="keywords" content="Reimburshment App" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--  Favicon -->
     <link rel="shortcut icon" type="image/png" href="../../dist/images/logos/favicon.ico" />
 

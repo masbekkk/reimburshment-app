@@ -43,4 +43,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function hasRoles($role)
+    {
+        return $this->hasRole($role);
+    }
+
+    public function reimburshment()
+    {
+        return $this->hasMany(Reimburshment::class, 'user_id', 'id');
+    }
 }

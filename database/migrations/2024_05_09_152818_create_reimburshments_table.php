@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('reimburshments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->date('date_of_submission');
             $table->string('reimburshment_name');
             $table->text('description');
             $table->string('support_file');
-            $table->enum('status', ['on_progress', 'accept', 'reject']);
+            $table->enum('status', ['on_progress', 'accept', 'reject'])->default('on_progress');
             $table->string('notes')->nullable();
             $table->timestamps();
         });

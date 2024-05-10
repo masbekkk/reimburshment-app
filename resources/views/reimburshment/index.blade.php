@@ -4,8 +4,37 @@
     <!-- Datatable css -->
     <!-- --------------------------------------------------- -->
     <link rel="stylesheet" href="../../dist/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+
+    <link rel="stylesheet" href="../../dist/libs/summernote/dist/summernote-lite.min.css">
+    <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
 @section('main')
+    <!-- detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Reimburshment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Support File</label>
+                        <div class="detail_support_file"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <p class="description_detail"></p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
@@ -33,607 +62,116 @@
                     <div class="card-body">
                         <div class="mb-2">
                             <h5 class="card-title">
-                                Your Reimburshment
+                                {{ auth()->user()->hasRoles('staff') ? 'Your Reimburshment' : 'Staff\'s Reimburshment Request' }}
                             </h5>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-info btn-rounded m-t-10 mb-2" data-bs-toggle="modal"
+                                data-bs-target="#add-reimburshment">
+                                Add New Reimburshment
+                            </button>
+                        </div>
+                        <!-- Add Contact Popup Model -->
+                        <div id="add-reimburshment" class="modal fade in" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <form class="form-horizontal form-material" id="form_store_reimburshment"
+                                        action="{{ route('reimburshment.store') }}" method="POST"
+                                        data-modal="dd-reimburshment">
+                                        <div class="modal-header d-flex align-items-center">
+                                            <h4 class="modal-title" id="myModalLabel">
+                                                Add New Reimburshment
+                                            </h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            @csrf
+                                            <div class="form-group">
+                                                <div class="col-md-12 mb-3">
+                                                    <input type="date" name="date_of_submission" class="form-control"
+                                                        placeholder="date of submission" />
+                                                </div>
+                                                <div class="col-md-12 mb-3">
+                                                    <input type="text" name="reimburshment_name" class="form-control"
+                                                        placeholder="Reimburshment Name" />
+                                                </div>
+                                                <div class="col-md-12 mb-3">
+                                                    <textarea name="description" id="editor" style="height: 300px"></textarea>
+                                                    {{-- <tid="editor"></div> --}}
+                                                </div>
+                                                <div class="col-md-12 mb-3">
+                                                    <div
+                                                        class="
+                                              fileupload
+                                              btn btn-danger btn-rounded
+                                              waves-effect waves-light
+                                              btn-sm
+                                            ">
+                                                        <span><i class="ion-upload m-r-5"></i>Upload
+                                                            Support File</span>
+                                                        <input type="file" class="upload" name="support_file" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-info waves-effect"
+                                                data-bs-dismiss="modal">
+                                                Save
+                                            </button>
+                                            <button type="button" class="btn btn-default waves-effect"
+                                                data-bs-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered border text-inputs-searching text-nowrap">
+                            <table id="table-1"
+                                class="table table-striped table-bordered border text-inputs-searching text-nowrap">
                                 <thead>
                                     <!-- start row -->
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
+                                        <th>No</th>
+                                        @if (!auth()->user()->hasRoles('staff'))
+                                            <th>NIP</th>
+                                            <th>Name</th>
+                                            <th>Position</th>
+                                        @endif
+                                        <th>Submission Date</th>
+                                        <th>Reimburshment Name</th>
+                                        <th>Status</th>
+                                        <th>Detail</th>
+                                        <th>Action</th>
                                     </tr>
                                     <!-- end row -->
                                 </thead>
                                 <tbody>
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Tiger Nixon</td>
-                                        <td>System Architect</td>
-                                        <td>Edinburgh</td>
-                                        <td>61</td>
-                                        <td>2011/04/25</td>
-                                        <td>$320,800</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Garrett Winters</td>
-                                        <td>Accountant</td>
-                                        <td>Tokyo</td>
-                                        <td>63</td>
-                                        <td>2011/07/25</td>
-                                        <td>$170,750</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Ashton Cox</td>
-                                        <td>Junior Technical Author</td>
-                                        <td>San Francisco</td>
-                                        <td>66</td>
-                                        <td>2009/01/12</td>
-                                        <td>$86,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Cedric Kelly</td>
-                                        <td>Senior Javascript Developer</td>
-                                        <td>Edinburgh</td>
-                                        <td>22</td>
-                                        <td>2012/03/29</td>
-                                        <td>$433,060</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Airi Satou</td>
-                                        <td>Accountant</td>
-                                        <td>Tokyo</td>
-                                        <td>33</td>
-                                        <td>2008/11/28</td>
-                                        <td>$162,700</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Brielle Williamson</td>
-                                        <td>Integration Specialist</td>
-                                        <td>New York</td>
-                                        <td>61</td>
-                                        <td>2012/12/02</td>
-                                        <td>$372,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Herrod Chandler</td>
-                                        <td>Sales Assistant</td>
-                                        <td>San Francisco</td>
-                                        <td>59</td>
-                                        <td>2012/08/06</td>
-                                        <td>$137,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Rhona Davidson</td>
-                                        <td>Integration Specialist</td>
-                                        <td>Tokyo</td>
-                                        <td>55</td>
-                                        <td>2010/10/14</td>
-                                        <td>$327,900</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Colleen Hurst</td>
-                                        <td>Javascript Developer</td>
-                                        <td>San Francisco</td>
-                                        <td>39</td>
-                                        <td>2009/09/15</td>
-                                        <td>$205,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Sonya Frost</td>
-                                        <td>Software Engineer</td>
-                                        <td>Edinburgh</td>
-                                        <td>23</td>
-                                        <td>2008/12/13</td>
-                                        <td>$103,600</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Jena Gaines</td>
-                                        <td>Office Manager</td>
-                                        <td>London</td>
-                                        <td>30</td>
-                                        <td>2008/12/19</td>
-                                        <td>$90,560</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Quinn Flynn</td>
-                                        <td>Support Lead</td>
-                                        <td>Edinburgh</td>
-                                        <td>22</td>
-                                        <td>2013/03/03</td>
-                                        <td>$342,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Charde Marshall</td>
-                                        <td>Regional Director</td>
-                                        <td>San Francisco</td>
-                                        <td>36</td>
-                                        <td>2008/10/16</td>
-                                        <td>$470,600</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Haley Kennedy</td>
-                                        <td>Senior Marketing Designer</td>
-                                        <td>London</td>
-                                        <td>43</td>
-                                        <td>2012/12/18</td>
-                                        <td>$313,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Tatyana Fitzpatrick</td>
-                                        <td>Regional Director</td>
-                                        <td>London</td>
-                                        <td>19</td>
-                                        <td>2010/03/17</td>
-                                        <td>$385,750</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Michael Silva</td>
-                                        <td>Marketing Designer</td>
-                                        <td>London</td>
-                                        <td>66</td>
-                                        <td>2012/11/27</td>
-                                        <td>$198,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Paul Byrd</td>
-                                        <td>Chief Financial Officer (CFO)</td>
-                                        <td>New York</td>
-                                        <td>64</td>
-                                        <td>2010/06/09</td>
-                                        <td>$725,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Gloria Little</td>
-                                        <td>Systems Administrator</td>
-                                        <td>New York</td>
-                                        <td>59</td>
-                                        <td>2009/04/10</td>
-                                        <td>$237,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Bradley Greer</td>
-                                        <td>Software Engineer</td>
-                                        <td>London</td>
-                                        <td>41</td>
-                                        <td>2012/10/13</td>
-                                        <td>$132,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Dai Rios</td>
-                                        <td>Personnel Lead</td>
-                                        <td>Edinburgh</td>
-                                        <td>35</td>
-                                        <td>2012/09/26</td>
-                                        <td>$217,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Jenette Caldwell</td>
-                                        <td>Development Lead</td>
-                                        <td>New York</td>
-                                        <td>30</td>
-                                        <td>2011/09/03</td>
-                                        <td>$345,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Yuri Berry</td>
-                                        <td>Chief Marketing Officer (CMO)</td>
-                                        <td>New York</td>
-                                        <td>40</td>
-                                        <td>2009/06/25</td>
-                                        <td>$675,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Caesar Vance</td>
-                                        <td>Pre-Sales Support</td>
-                                        <td>New York</td>
-                                        <td>21</td>
-                                        <td>2011/12/12</td>
-                                        <td>$106,450</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Doris Wilder</td>
-                                        <td>Sales Assistant</td>
-                                        <td>Sidney</td>
-                                        <td>23</td>
-                                        <td>2010/09/20</td>
-                                        <td>$85,600</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Angelica Ramos</td>
-                                        <td>Chief Executive Officer (CEO)</td>
-                                        <td>London</td>
-                                        <td>47</td>
-                                        <td>2009/10/09</td>
-                                        <td>$1,200,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Gavin Joyce</td>
-                                        <td>Developer</td>
-                                        <td>Edinburgh</td>
-                                        <td>42</td>
-                                        <td>2010/12/22</td>
-                                        <td>$92,575</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Jennifer Chang</td>
-                                        <td>Regional Director</td>
-                                        <td>Singapore</td>
-                                        <td>28</td>
-                                        <td>2010/11/14</td>
-                                        <td>$357,650</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Brenden Wagner</td>
-                                        <td>Software Engineer</td>
-                                        <td>San Francisco</td>
-                                        <td>28</td>
-                                        <td>2011/06/07</td>
-                                        <td>$206,850</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Fiona Green</td>
-                                        <td>Chief Operating Officer (COO)</td>
-                                        <td>San Francisco</td>
-                                        <td>48</td>
-                                        <td>2010/03/11</td>
-                                        <td>$850,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Shou Itou</td>
-                                        <td>Regional Marketing</td>
-                                        <td>Tokyo</td>
-                                        <td>20</td>
-                                        <td>2011/08/14</td>
-                                        <td>$163,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Michelle House</td>
-                                        <td>Integration Specialist</td>
-                                        <td>Sidney</td>
-                                        <td>37</td>
-                                        <td>2011/06/02</td>
-                                        <td>$95,400</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Suki Burks</td>
-                                        <td>Developer</td>
-                                        <td>London</td>
-                                        <td>53</td>
-                                        <td>2009/10/22</td>
-                                        <td>$114,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Prescott Bartlett</td>
-                                        <td>Technical Author</td>
-                                        <td>London</td>
-                                        <td>27</td>
-                                        <td>2011/05/07</td>
-                                        <td>$145,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Gavin Cortez</td>
-                                        <td>Team Leader</td>
-                                        <td>San Francisco</td>
-                                        <td>22</td>
-                                        <td>2008/10/26</td>
-                                        <td>$235,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Martena Mccray</td>
-                                        <td>Post-Sales support</td>
-                                        <td>Edinburgh</td>
-                                        <td>46</td>
-                                        <td>2011/03/09</td>
-                                        <td>$324,050</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Unity Butler</td>
-                                        <td>Marketing Designer</td>
-                                        <td>San Francisco</td>
-                                        <td>47</td>
-                                        <td>2009/12/09</td>
-                                        <td>$85,675</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Howard Hatfield</td>
-                                        <td>Office Manager</td>
-                                        <td>San Francisco</td>
-                                        <td>51</td>
-                                        <td>2008/12/16</td>
-                                        <td>$164,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Hope Fuentes</td>
-                                        <td>Secretary</td>
-                                        <td>San Francisco</td>
-                                        <td>41</td>
-                                        <td>2010/02/12</td>
-                                        <td>$109,850</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Vivian Harrell</td>
-                                        <td>Financial Controller</td>
-                                        <td>San Francisco</td>
-                                        <td>62</td>
-                                        <td>2009/02/14</td>
-                                        <td>$452,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Timothy Mooney</td>
-                                        <td>Office Manager</td>
-                                        <td>London</td>
-                                        <td>37</td>
-                                        <td>2008/12/11</td>
-                                        <td>$136,200</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Jackson Bradshaw</td>
-                                        <td>Director</td>
-                                        <td>New York</td>
-                                        <td>65</td>
-                                        <td>2008/09/26</td>
-                                        <td>$645,750</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Olivia Liang</td>
-                                        <td>Support Engineer</td>
-                                        <td>Singapore</td>
-                                        <td>64</td>
-                                        <td>2011/02/03</td>
-                                        <td>$234,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Bruno Nash</td>
-                                        <td>Software Engineer</td>
-                                        <td>London</td>
-                                        <td>38</td>
-                                        <td>2011/05/03</td>
-                                        <td>$163,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Sakura Yamamoto</td>
-                                        <td>Support Engineer</td>
-                                        <td>Tokyo</td>
-                                        <td>37</td>
-                                        <td>2009/08/19</td>
-                                        <td>$139,575</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Thor Walton</td>
-                                        <td>Developer</td>
-                                        <td>New York</td>
-                                        <td>61</td>
-                                        <td>2013/08/11</td>
-                                        <td>$98,540</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Finn Camacho</td>
-                                        <td>Support Engineer</td>
-                                        <td>San Francisco</td>
-                                        <td>47</td>
-                                        <td>2009/07/07</td>
-                                        <td>$87,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Serge Baldwin</td>
-                                        <td>Data Coordinator</td>
-                                        <td>Singapore</td>
-                                        <td>64</td>
-                                        <td>2012/04/09</td>
-                                        <td>$138,575</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Zenaida Frank</td>
-                                        <td>Software Engineer</td>
-                                        <td>New York</td>
-                                        <td>63</td>
-                                        <td>2010/01/04</td>
-                                        <td>$125,250</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Zorita Serrano</td>
-                                        <td>Software Engineer</td>
-                                        <td>San Francisco</td>
-                                        <td>56</td>
-                                        <td>2012/06/01</td>
-                                        <td>$115,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Jennifer Acosta</td>
-                                        <td>Junior Javascript Developer</td>
-                                        <td>Edinburgh</td>
-                                        <td>43</td>
-                                        <td>2013/02/01</td>
-                                        <td>$75,650</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Cara Stevens</td>
-                                        <td>Sales Assistant</td>
-                                        <td>New York</td>
-                                        <td>46</td>
-                                        <td>2011/12/06</td>
-                                        <td>$145,600</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Hermione Butler</td>
-                                        <td>Regional Director</td>
-                                        <td>London</td>
-                                        <td>47</td>
-                                        <td>2011/03/21</td>
-                                        <td>$356,250</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Lael Greer</td>
-                                        <td>Systems Administrator</td>
-                                        <td>London</td>
-                                        <td>21</td>
-                                        <td>2009/02/27</td>
-                                        <td>$103,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Jonas Alexander</td>
-                                        <td>Developer</td>
-                                        <td>San Francisco</td>
-                                        <td>30</td>
-                                        <td>2010/07/14</td>
-                                        <td>$86,500</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Shad Decker</td>
-                                        <td>Regional Director</td>
-                                        <td>Edinburgh</td>
-                                        <td>51</td>
-                                        <td>2008/11/13</td>
-                                        <td>$183,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Michael Bruce</td>
-                                        <td>Javascript Developer</td>
-                                        <td>Singapore</td>
-                                        <td>29</td>
-                                        <td>2011/06/27</td>
-                                        <td>$183,000</td>
-                                    </tr>
-                                    <!-- end row -->
-                                    <!-- start row -->
-                                    <tr>
-                                        <td>Donna Snider</td>
-                                        <td>Customer Support</td>
-                                        <td>New York</td>
-                                        <td>27</td>
-                                        <td>2011/01/25</td>
-                                        <td>$112,000</td>
-                                    </tr>
-                                    <!-- end row -->
                                 </tbody>
-                                <tfoot>
+                                {{-- <tfoot>
                                     <!-- start row -->
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Office</th>
-                                        <th>Age</th>
-                                        <th>Start date</th>
-                                        <th>Salary</th>
+                                        <th>No</th>
+                                        @if (!auth()->user()->hasRoles('staff'))
+                                            <th>NIP</th>
+                                            <th>Name</th>
+                                            <th>Position</th>
+                                        @endif
+                                        <th>Submission Date</th>
+                                        <th>Reimburshment Name</th>
+                                        <th>Detail</th>
+                                        <th>Action</th>
                                     </tr>
                                     <!-- end row -->
-                                </tfoot>
+                                </tfoot> --}}
                             </table>
                         </div>
                     </div>
@@ -645,5 +183,230 @@
 
 @push('scripts')
     <script src="../../dist/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="../../dist/js/datatable/datatable-api.init.js"></script>
+    <script src="../../dist/libs/summernote/dist/summernote-lite.min.js"></script>
+    <script src="../../dist/libs/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="../../dist/js/datatable/index.js"></script>
+    <!-- ---------------------------------------------- -->
+    <!-- current page js files -->
+    <!-- ---------------------------------------------- -->
+    <!-- Initialize Quill editor -->
+    <script>
+        $("#editor").summernote({
+            height: 350, // set editor height
+            minHeight: null, // set minimum height of editor
+            maxHeight: null, // set maximum height of editor
+            focus: false, // set focus to editable area after initializing summernote
+        });
+        $('#form_store_reimburshment').submit(function(e) {
+            e.preventDefault();
+            // alert($(this).data('modal'))
+
+            let form = $(this);
+            var form_data = new FormData($('#form_store_reimburshment')[0]);
+            var arr_params = {
+                url: form.attr('action'),
+                method: 'POST',
+                input: form_data,
+                forms: form[0],
+                modal: $('#' + form.data('modal')).modal('hide'),
+                reload: false,
+                processData: false,
+                contentType: false,
+            }
+            ajaxSaveDatas(arr_params)
+        });
+    </script>
+    <script>
+        const isStaff = "{{ auth()->user()->hasRoles('staff') }}";
+        var dataColumns = [{
+                data: 'id'
+            },
+            {
+                data: 'date_of_submission'
+            },
+            {
+                data: 'reimburshment_name'
+            },
+            {
+                data: 'status'
+            },
+            {
+                data: 'id'
+            },
+            {
+                data: 'id'
+            },
+        ];
+        var columnDef = [{
+                targets: [0],
+                data: 'id',
+                render: function(data, type, full, meta) {
+                    return `<p class="text-center"> ${meta.row + 1} </p>`
+                }
+            },
+            {
+                targets: [3],
+                data: 'status',
+                render: function(data, type, full, meta) {
+                    if (data == 'on_progress') {
+                        return `<span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-reload fs-4"></i>On Progress</span>`
+                    } else if (data == 'accept') {
+                        return `<span class="badge bg-light-success rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-check fs-4"></i>Accepted</span>`
+                    } else if (data == 'reject') {
+                        return `<span class="badge bg-light-danger rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-close fs-4"></i>Rejected</span>`
+                    }
+                }
+            },
+            {
+                targets: [4],
+                data: 'link',
+                render: function(data, type, full, meta) {
+                    return `<a href="#detailProject" data-bs-toggle="modal" data-bs-target="#detailModal" class="btn btn-info" data-description="${full.description}" data-support_file="${window.location.origin + '/' + full.support_file}" ><i class="fas fa-eye"></i> Tap to View</a>`
+                }
+            },
+            {
+                targets: [5],
+                data: 'id',
+                render: function(data, type, full, meta) {
+                    return `<div class="row w-100">
+                           <div class="col-12 d-flex">
+                              <a class="btn btn-warning btn-lg mr-1"
+                                 href="#editData" data-toggle="modal" data-target="#editProjectModal" data-id=${data}
+                                 data-project_title="${full.project_title}" data-publication_link="${full.publication_link}"
+                                 data-description="${full.description}" data-image="${full.image}" data-start_date="${full.start_date}"  data-end_date="${full.end_date}" data-url="${window.urlPrefixAdmin}project/${data}"
+                                 title="Edit"><i class="fas fa-edit"></i></a>
+                              <a class="btn btn-danger btn-lg ml-1"
+                                 href="#deleteData" data-delete-url="/reimburshment/${data}" 
+                                 onclick="return deleteConfirm(this,'delete')"
+                                 title="Delete"><i class="fas fa-trash"></i></a>
+                           </div>
+                     </div>`
+                },
+            }
+        ];
+        if (!isStaff) {
+            dataColumns = [{
+                    data: 'id'
+                },
+                {
+                    data: 'user.nip'
+                },
+                {
+                    data: 'user.name'
+                },
+                {
+                    data: 'user.job_title'
+                },
+                {
+                    data: 'date_of_submission'
+                },
+                {
+                    data: 'reimburshment_name'
+                },
+                {
+                    data: 'status'
+                },
+                {
+                    data: 'id'
+                },
+                {
+                    data: 'id'
+                },
+            ];
+
+            columnDef = [{
+                    targets: [0],
+                    data: 'id',
+                    render: function(data, type, full, meta) {
+                        return `<p class="text-center"> ${meta.row + 1} </p>`
+                    }
+                },
+                {
+                    targets: [6],
+                    data: 'status',
+                    render: function(data, type, full, meta) {
+                        if (data == 'on_progress') {
+                            return `<span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-reload fs-4"></i>On Progress</span>`
+                        } else if (data == 'accept') {
+                            return `<span class="badge bg-light-success rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-check fs-4"></i>Accepted</span>`
+                        } else if (data == 'reject') {
+                            return `<span class="badge bg-light-danger rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-close fs-4"></i>Rejected</span>`
+                        }
+                    }
+                },
+                {
+                    targets: [7],
+                    data: 'link',
+                    render: function(data, type, full, meta) {
+                        return `<a href="#detailProject" data-bs-toggle="modal" data-bs-target="#detailModal" class="btn btn-info" data-description="${full.description}" data-support_file="${window.location.origin + '/' + full.support_file}" ><i class="fas fa-eye"></i> Tap to View</a>`
+                    }
+                },
+                {
+                    targets: [8],
+                    data: 'id',
+                    render: function(data, type, full, meta) {
+                        return `<div class="row w-100">
+                           <div class="col-12 d-flex">
+                              <a class="btn btn-warning btn-lg mr-1"
+                                 href="#editData" data-toggle="modal" data-target="#editProjectModal" data-id=${data}
+                                 data-project_title="${full.project_title}" data-publication_link="${full.publication_link}"
+                                 data-description="${full.description}" data-image="${full.image}" data-start_date="${full.start_date}"  data-end_date="${full.end_date}" data-url="${window.urlPrefixAdmin}project/${data}"
+                                 title="Edit"><i class="fas fa-edit"></i></a>
+                              <a class="btn btn-danger btn-lg ml-1"
+                                 href="#deleteData" data-delete-url="${window.urlPrefixAdmin}project/${data}" 
+                                 onclick="return deleteConfirm(this,'delete')"
+                                 title="Delete"><i class="fas fa-trash"></i></a>
+                           </div>
+                     </div>`
+                    },
+                }
+            ];
+
+        }
+        var arrayParams = {
+            idTable: '#table-1',
+            urlAjax: "{{ route('reimburshment.get-data') }}",
+            columns: dataColumns,
+            defColumn: columnDef,
+
+        }
+        loadAjaxDataTables(arrayParams);
+        // table.on('xhr', function() {
+        //     jsonTables = table.ajax.json();
+        //     // console.log( jsonTables.data[350]["id"] +' row(s) were loaded' );
+        // });
+        function getFileType(url) {
+            // Extract the file extension
+            const extension = url.split('.').pop().toLowerCase();
+
+            // Define image extensions
+            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+
+            // Define document extensions
+            const documentExtensions = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
+
+            // Check if the extension is in the list of image extensions
+            if (imageExtensions.includes(extension)) {
+                return 'image';
+            }
+
+            // Check if the extension is in the list of document extensions
+            if (documentExtensions.includes(extension)) {
+                return 'document';
+            }
+
+            // Default to 'unknown' if not recognized
+            return 'unknown';
+        }
+        $('#detailModal').on('show.bs.modal', function(e) {
+            const button = $(e.relatedTarget);
+            let file = button.data('support_file');
+            if (getFileType(file) == 'document')
+            $('.detail_support_file').html(`<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
+            else $('.detail_support_file').html(`<img src="${file}" id="modalImage_detail" class="img-fluid">`)
+
+            $('.description_detail').html(button.data('description'))
+        })
+    </script>
+    {{-- <script src="../../dist/js/datatable/datatable-api.init.js"></script> --}}
 @endpush
