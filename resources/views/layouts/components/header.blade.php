@@ -7,14 +7,13 @@
                 </a>
             </li>
         </ul>
-    
+
         <div class="d-block d-lg-none">
             <img src="../../dist/images/logos/dark-logo.svg" class="dark-logo" width="180" alt="" />
             <img src="../../dist/images/logos/light-logo.svg" class="light-logo" width="180" alt="" />
         </div>
-        <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-            aria-label="Toggle navigation">
+        <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="p-2">
                 <i class="ti ti-dots fs-7"></i>
             </span>
@@ -56,7 +55,13 @@
                                     </div>
                                 </div>
                                 <div class="d-grid py-4 px-7 pt-8">
-                                    <a href="./authentication-login.html" class="btn btn-outline-primary">Log Out</a>
+                                    <a class="btn btn-outline-primary" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">Log
+                                        Out</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
                                 </div>
                             </div>
                         </div>
