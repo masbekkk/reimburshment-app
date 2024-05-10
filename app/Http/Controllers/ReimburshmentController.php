@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class ReimburshmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:direktur|finance')->except('index');
+    }
     /**
      * Display a listing of the resource.
      */

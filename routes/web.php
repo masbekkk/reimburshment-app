@@ -18,6 +18,6 @@ Route::get('/', function () {
     return view('layouts.index');
 });
 
-Route::resource('reimburshment', ReimburshmentController::class)->middleware('role:direktur|finance');
+Route::resource('reimburshment', ReimburshmentController::class);
 
 require __DIR__.'/auth.php';
