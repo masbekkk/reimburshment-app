@@ -49,6 +49,11 @@ class User extends Authenticatable
         return $this->hasRole($role);
     }
 
+    public function hasPermission($permission)
+    {
+        return $this->hasAnyPermission($permission);
+    }
+
     public function reimburshment()
     {
         return $this->hasMany(Reimburshment::class, 'user_id', 'id');

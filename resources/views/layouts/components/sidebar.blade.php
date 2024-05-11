@@ -21,21 +21,23 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                    <a class="sidebar-link" href="{{ route('reimburshment.index')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-aperture"></i>
                         </span>
-                        <span class="hide-menu">Modern</span>
+                        <span class="hide-menu">Reimburshment</span>
                     </a>
                 </li>
+                @if(auth()->user()->hasPermission('create staff account'))
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="./index2.html" aria-expanded="false">
                         <span>
-                            <i class="ti ti-shopping-cart"></i>
+                            <i class="ti ti-users"></i>
                         </span>
-                        <span class="hide-menu">eCommerce</span>
+                        <span class="hide-menu">Employees</span>
                     </a>
                 </li>
+                @endif
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="./index3.html" aria-expanded="false">
                         <span>

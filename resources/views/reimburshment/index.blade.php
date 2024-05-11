@@ -267,6 +267,7 @@
                     contentType: false,
                 }
                 ajaxSaveDatas(arr_params)
+                $('.editor').summernote('code', '');
             });
             const isStaff = "{{ auth()->user()->hasRoles('staff') }}";
             const isDirektur = "{{ auth()->user()->hasRoles('direktur') }}";
@@ -307,7 +308,7 @@
                             return `<span class="badge bg-light-success rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-check fs-4"></i>Accepted</span>`
                         } else if (data == 'reject') {
                             return `<span class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-close fs-4"></i>Rejected</span>`
-                        } else if (data == 'reject') {
+                        } else if (data == 'done') {
                             return `<span class="badge bg-success rounded-3 fw-semibold fs-2">Done</span>`
                         }
                     }
@@ -351,12 +352,16 @@
                      
                       </div>`
                         } else if (isFinance) {
-                            return `<div class="input-group">
+                            if (full.status !== 'done') {
+                                return `<div class="input-group">
                         <select class="form-select update_status" name="status" required data-id="${data}" data-token="${token}">
                           <option value="">Choose...</option>
                           <option value="done">Done</option>
                         </select>
                       </div>`
+                            } else {
+                                return `<span class="badge bg-info rounded-3 fw-semibold fs-2">Finish</span>`
+                            }
                         }
                     },
                 }
@@ -435,7 +440,7 @@
 
             $(document).on('change', '.update_status', function() {
 
-                let status = $('.update_status').val();
+                let status = $(this).val();
                 if (status == "") {
                     alert("Please select status first!");
                 } else {
