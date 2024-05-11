@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class EmployeeController extends Controller
 {
@@ -18,7 +19,7 @@ class EmployeeController extends Controller
             $roleNames = ['staff', 'finance'];
             $usersWithRoles = User::with('roles')->whereHas('roles', function ($query) use ($roleNames) {
                 $query->whereIn('name', $roleNames);
-            })->get();
+            })->orWhereDoesntHave('roles')->with('roles')->get();
 
             return response()->json([
                 'status' => 'success',
@@ -27,20 +28,60 @@ class EmployeeController extends Controller
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+
             Log::error('Error retrieve users data: ' . $errorMessage);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to retrieve',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 
     public function index()
     {
         return view('employees.index');
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => ['required', 'string', 'max:255'],
+                'nip' => ['required', 'integer', 'unique:' . User::class],
+                'job_title' => ['required', 'string', 'max:255'],
+                'password' => ['required', 'confirmed', Password::defaults()],
+                'role' => 'required|in:finance,staff',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $user = new User();
+            $user->name = $request->name;
+            $user->nip = $request->nip;
+            $user->job_title = $request->job_title;
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            $user->syncRoles($request->role);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Stored Successfully!',
+                'data' => $user,
+            ], Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            $errorMessage = $e->getMessage();
+
+            Log::error('Error store empployee data: ' . $errorMessage);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to store',
+                'data' => null,
+                'errors' => $errorMessage,
+            ], 500);
+        }
     }
 
     /**
@@ -51,10 +92,11 @@ class EmployeeController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255'],
+                'nip' => ['required', 'integer', 'unique:' . User::class],
+                'job_title' => ['required', 'string', 'max:255'],
                 'role' => 'required|in:finance,staff',
-            ] + ($request->filled('password') ? ['password' => ['string', 'min:8', 'confirmed']] : []));
-    
+            ] + ($request->filled('password') ? ['password' => ['required', 'confirmed', Password::defaults()]] : []));
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
@@ -64,7 +106,7 @@ class EmployeeController extends Controller
             ] + ($request->filled('password') ? ['password' => Hash::make($request->password)] : []));
 
             $user->syncRoles($request->role);
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Updated Successfully!',
@@ -72,23 +114,24 @@ class EmployeeController extends Controller
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+
             Log::error('Error update empployee data: ' . $errorMessage);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to update',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
         try {
+            $user = User::findOrFail($id);
             $user->delete();
             return response()->json([
                 'status' => 'success',
@@ -97,14 +140,14 @@ class EmployeeController extends Controller
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+
             Log::error('Error delete user data: ' . $errorMessage);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to delete',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 }

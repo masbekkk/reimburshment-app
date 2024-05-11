@@ -117,7 +117,7 @@
                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                 <div class="modal-content">
                                     <form class="form-horizontal form-material" id="form_store_employees"
-                                        action="{{ route('employees.store') }}" method="POST" data-modal="dd-employees">
+                                        action="{{ route('employees.store') }}" method="POST" data-modal="add-employees">
                                         <div class="modal-header d-flex align-items-center">
                                             <h4 class="modal-title" id="myModalLabel">
                                                 Add New Employee
@@ -129,36 +129,41 @@
 
                                             @csrf
                                             <div class="form-group">
-                                                <label>Date Of Submission</label>
+                                                <label>NIP</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="date" name="date_of_submission" class="form-control"
-                                                        placeholder="date of submission" />
+                                                    <input type="number" name="nip" class="form-control"
+                                                        placeholder="NIP" />
                                                 </div>
-                                                <label>employees Name</label>
+                                                <label>Employees Name</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="text" name="employees_name" class="form-control"
+                                                    <input type="text" name="name" class="form-control"
                                                         placeholder="employees Name" />
                                                 </div>
-                                                <label>Description</label>
+                                                <label>Job Title</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <textarea name="description" class="editor"></textarea>
+                                                    <input type="text" name="job_title" class="form-control"
+                                                        placeholder="Job title" />
                                                 </div>
-                                                <label>Support File</label>
+                                                <label>Password</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <div
-                                                        class="
-                                              fileupload
-                                              btn btn-danger btn-rounded
-                                              waves-effect waves-light
-                                              btn-sm
-                                            ">
-                                                        <span><i class="ion-upload m-r-5"></i>Upload
-                                                            Support File</span>
-                                                        <input type="file" class="upload" name="support_file" />
-                                                    </div>
+                                                    <input type="password" name="password" class="form-control"
+                                                        placeholder="Password" />
                                                 </div>
-                                            </div>
+                                                <label>Confirm Password</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <input type="password" name="password_confirmation" class="form-control"
+                                                        placeholder="Password" />
+                                                </div>
+                                                <label>Role User</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <select class="form-select update_status" name="role" required>
+                                                        <option value="">Choose Role...</option>
+                                                        <option value="finance">Finance</option>
+                                                        <option value="staff">Staff</option>
+                                                    </select>
+                                                </div>
 
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-info waves-effect"
@@ -215,11 +220,10 @@
                 // alert($(this).data('modal'))
 
                 let form = $(this);
-                var form_data = new FormData($('#form_store_employees')[0]);
                 var arr_params = {
                     url: form.attr('action'),
                     method: 'POST',
-                    input: form_data,
+                    input: form.serialize(),
                     forms: form[0],
                     modal: $('.' + form.data('modal')).modal('hide'),
                     reload: false,

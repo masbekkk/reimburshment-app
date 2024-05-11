@@ -37,14 +37,14 @@ class ReimburshmentController extends Controller
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+           
             Log::error('Error retrieve reimburshment data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to retrieve',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 
@@ -93,14 +93,14 @@ class ReimburshmentController extends Controller
             
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+           
             Log::error('Error store reimburshment data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to store',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 
@@ -154,14 +154,14 @@ class ReimburshmentController extends Controller
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+           
             Log::error('Error store reimburshment data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to update',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 
@@ -183,14 +183,14 @@ class ReimburshmentController extends Controller
 
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+           
             Log::error('Error delete reimburshment data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to delete',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 
@@ -219,14 +219,14 @@ class ReimburshmentController extends Controller
             
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            $statusCode = $e->getCode();
+           
             Log::error('Error Status Updated reimburshment data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to Status Updated',
                 'data' => null,
                 'errors' => $errorMessage,
-            ], $statusCode);
+            ], 500);
         }
     }
 }
