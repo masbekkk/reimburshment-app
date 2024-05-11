@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ReimburshmentController;
+use App\Http\Controllers\RolesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,8 +25,13 @@ Route::middleware('auth')->group(function () {
     Route::get('get-reimburshment', [ReimburshmentController::class, 'getReimburshment'])->name('reimburshment.get-data');
     Route::post('reimburshment/update-status', [ReimburshmentController::class, 'updateStatus'])->name('reimburshment.update-status');
 
-    Route::resource('employees', EmployeeController::class)->middleware('role:direktur');
-    Route::get('get-employees', [EmployeeController::class, 'getEmployees'])->name('employees.get-data')->middleware('role:direktur');
+    Route::middleware('role:direktur')->group(function () {
+        Route::resource('employees', EmployeeController::class);
+        Route::get('get-employees', [EmployeeController::class, 'getEmployees'])->name('employees.get-data');
+
+        Route::resource('roles', RolesController::class);
+        Route::get('get-roles', [RolesController::class, 'getRoles'])->name('roles.get-data');
+    });
 });
 
 require __DIR__ . '/auth.php';

@@ -17,13 +17,18 @@ class RolePermissionSeeder extends Seeder
         $direktur = Role::create(['name' => 'direktur']);
         $finance = Role::create(['name' => 'finance']);
         $staff = Role::create(['name' => 'staff']);
+        $super_admin = Role::create(['name' => 'super admin']);
 
+        $crudReimburshment = Permission::create(['name' => 'crud reimburshment']);
         $editStatusReimburshment = Permission::create(['name' => 'edit status reimburshment']);
         $createStaffAccount = Permission::create(['name' => 'create staff account']);
         $editStaffAccount = Permission::create(['name' => 'edit staff account']);
         $deleteStaffAccount = Permission::create(['name' => 'delete staff account']);
+        $crudRolePemission = Permission::create(['name' => 'crud role']);
 
         $direktur->givePermissionTo([$editStatusReimburshment, $createStaffAccount, $editStaffAccount, $deleteStaffAccount]);
         $finance->givePermissionTo([$editStatusReimburshment]);
+        $staff->givePermissionTo($crudReimburshment);
+        $super_admin->givePermissionTo($crudRolePemission);
     }
 }

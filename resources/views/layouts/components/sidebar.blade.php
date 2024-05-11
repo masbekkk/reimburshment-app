@@ -38,6 +38,16 @@
                     </a>
                 </li>
                 @endif
+                @if(auth()->user()->hasPermission('crud role'))
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('roles.index')}}" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-briefcase"></i>
+                        </span>
+                        <span class="hide-menu">Roles</span>
+                    </a>
+                </li>
+                @endif
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
