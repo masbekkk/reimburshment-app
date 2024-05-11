@@ -132,10 +132,12 @@
                             </h5>
                         </div>
                         <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-info btn-rounded m-t-10 mb-2" data-bs-toggle="modal"
-                                data-bs-target=".add-reimburshment">
-                                Add New Reimburshment
-                            </button>
+                            @if (auth()->user()->hasRoles('staff'))
+                                <button type="button" class="btn btn-info btn-rounded m-t-10 mb-2" data-bs-toggle="modal"
+                                    data-bs-target=".add-reimburshment">
+                                    Add New Reimburshment
+                                </button>
+                            @endif
                         </div>
                         <!-- Add Reimburshment Popup Model -->
                         <div id="scroll-long-outer-modal" class="modal fade in add-reimburshment" tabindex="-1"
@@ -225,22 +227,6 @@
                                 </thead>
                                 <tbody>
                                 </tbody>
-                                {{-- <tfoot>
-                                    <!-- start row -->
-                                    <tr>
-                                        <th>No</th>
-                                        @if (!auth()->user()->hasRoles('staff'))
-                                            <th>NIP</th>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                        @endif
-                                        <th>Submission Date</th>
-                                        <th>Reimburshment Name</th>
-                                        <th>Detail</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    <!-- end row -->
-                                </tfoot> --}}
                             </table>
                         </div>
                     </div>
@@ -255,118 +241,38 @@
     <script src="../../dist/libs/summernote/dist/summernote-lite.min.js"></script>
     <script src="../../dist/libs/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="../../dist/js/datatable/index.js"></script>
-    <!-- ---------------------------------------------- -->
-    <!-- current page js files -->
-    <!-- ---------------------------------------------- -->
-    <!-- Initialize Quill editor -->
-    <script>
-        $(".editor").summernote({
-            // height: 150, // set editor height
-            minHeight: null, // set minimum height of editor
-            maxHeight: null, // set maximum height of editor
-            focus: false, // set focus to editable area after initializing summernote
-        });
-        $('#form_store_reimburshment').submit(function(e) {
-            e.preventDefault();
-            // alert($(this).data('modal'))
 
-            let form = $(this);
-            var form_data = new FormData($('#form_store_reimburshment')[0]);
-            var arr_params = {
-                url: form.attr('action'),
-                method: 'POST',
-                input: form_data,
-                forms: form[0],
-                modal: $('.' + form.data('modal')).modal('hide'),
-                reload: false,
-                processData: false,
-                contentType: false,
-            }
-            ajaxSaveDatas(arr_params)
-        });
-    </script>
     <script>
-        const isStaff = "{{ auth()->user()->hasRoles('staff') }}";
-        var dataColumns = [{
-                data: 'id'
-            },
-            {
-                data: 'date_of_submission'
-            },
-            {
-                data: 'reimburshment_name'
-            },
-            {
-                data: 'status'
-            },
-            {
-                data: 'id'
-            },
-            {
-                data: 'id'
-            },
-        ];
-        var columnDef = [{
-                targets: [0],
-                data: 'id',
-                render: function(data, type, full, meta) {
-                    return `<p class="text-center"> ${meta.row + 1} </p>`
+        $(document).ready(function() {
+            $(".editor").summernote({
+                // height: 150, // set editor height
+                minHeight: null, // set minimum height of editor
+                maxHeight: null, // set maximum height of editor
+                focus: false, // set focus to editable area after initializing summernote
+            });
+            $('#form_store_reimburshment').submit(function(e) {
+                e.preventDefault();
+                // alert($(this).data('modal'))
+
+                let form = $(this);
+                var form_data = new FormData($('#form_store_reimburshment')[0]);
+                var arr_params = {
+                    url: form.attr('action'),
+                    method: 'POST',
+                    input: form_data,
+                    forms: form[0],
+                    modal: $('.' + form.data('modal')).modal('hide'),
+                    reload: false,
+                    processData: false,
+                    contentType: false,
                 }
-            },
-            {
-                targets: [(isStaff ? 3 : 6)],
-                data: 'status',
-                render: function(data, type, full, meta) {
-                    if (data == 'on_progress') {
-                        return `<span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-reload fs-4"></i>On Progress</span>`
-                    } else if (data == 'accept') {
-                        return `<span class="badge bg-light-success rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-check fs-4"></i>Accepted</span>`
-                    } else if (data == 'reject') {
-                        return `<span class="badge bg-light-danger rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-close fs-4"></i>Rejected</span>`
-                    }
-                }
-            },
-            {
-                targets: [(isStaff ? 4 : 7)],
-                data: 'link',
-                render: function(data, type, full, meta) {
-                    return `<a href="#detailProject" data-bs-toggle="modal" data-bs-target="#detailModal" class="btn btn-info" data-description="${full.description}" data-support_file="${window.location.origin + '/' + full.support_file}" ><i class="fas fa-eye"></i> Tap to View</a>`
-                }
-            },
-            {
-                targets: [(isStaff ? 5 : 8)],
-                data: 'id',
-                render: function(data, type, full, meta) {
-                    return `<div class="row w-100">
-                           <div class="col-12 d-flex">
-                              <a class="btn btn-warning btn-lg mr-1"
-                                 href="/reimburshment/${data}/edit" 
-                                 
-                                 data-id=${data}
-                                 data-date="${full.date_of_submission}" data-reimburshment_name="${full.reimburshment_name}"
-                                 data-description="${full.description}" data-support_file="${full.support_file}" data-url="/project/${data}"
-                                 title="Edit"><i class="fas fa-edit"></i></a>
-                              <a class="btn btn-danger btn-lg ml-1"
-                                 href="#deleteData" data-delete-url="/reimburshment/${data}" 
-                                 onclick="return deleteConfirm(this,'delete')"
-                                 title="Delete"><i class="fas fa-trash"></i></a>
-                           </div>
-                     </div>`
-                },
-            }
-        ];
-        if (!isStaff) {
-            dataColumns = [{
+                ajaxSaveDatas(arr_params)
+            });
+            const isStaff = "{{ auth()->user()->hasRoles('staff') }}";
+            const isDirektur = "{{ auth()->user()->hasRoles('direktur') }}";
+            const isFinance = "{{ auth()->user()->hasRoles('finance') }}";
+            var dataColumns = [{
                     data: 'id'
-                },
-                {
-                    data: 'user.nip'
-                },
-                {
-                    data: 'user.name'
-                },
-                {
-                    data: 'user.job_title'
                 },
                 {
                     data: 'date_of_submission'
@@ -384,45 +290,172 @@
                     data: 'id'
                 },
             ];
+            var columnDef = [{
+                    targets: [0],
+                    data: 'id',
+                    render: function(data, type, full, meta) {
+                        return `<p class="text-center"> ${meta.row + 1} </p>`
+                    }
+                },
+                {
+                    targets: [(isStaff ? 3 : 6)],
+                    data: 'status',
+                    render: function(data, type, full, meta) {
+                        if (data == 'on_progress') {
+                            return `<span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-reload fs-4"></i>On Progress</span>`
+                        } else if (data == 'accept') {
+                            return `<span class="badge bg-light-success rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-check fs-4"></i>Accepted</span>`
+                        } else if (data == 'reject') {
+                            return `<span class="badge bg-light-danger rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-close fs-4"></i>Rejected</span>`
+                        } else if (data == 'reject') {
+                            return `<span class="badge bg-success rounded-3 fw-semibold fs-2">Done</span>`
+                        }
+                    }
+                },
+                {
+                    targets: [(isStaff ? 4 : 7)],
+                    data: 'link',
+                    render: function(data, type, full, meta) {
+                        return `<a href="#detailProject" data-bs-toggle="modal" data-bs-target="#detailModal" class="btn btn-info" data-description="${full.description}" data-support_file="${window.location.origin + '/' + full.support_file}" ><i class="fas fa-eye"></i> Tap to View</a>`
+                    }
+                },
+                {
+                    targets: [(isStaff ? 5 : 8)],
+                    width: '300px',
+                    data: 'id',
+                    render: function(data, type, full, meta) {
+                        let token = "{{ csrf_token() }}";
+                        if (isStaff) {
+                            return `<div class="row w-100">
+                           <div class="col-12 d-flex">
+                              <a class="btn btn-warning btn-lg mr-1"
+                                 href="/reimburshment/${data}/edit" 
+                                 
+                                 data-id=${data}
+                                 data-date="${full.date_of_submission}" data-reimburshment_name="${full.reimburshment_name}"
+                                 data-description="${full.description}" data-support_file="${full.support_file}" data-url="/project/${data}"
+                                 title="Edit"><i class="fas fa-edit"></i></a>
+                              <a class="btn btn-danger btn-lg ml-1"
+                                 href="#deleteData" data-delete-url="/reimburshment/${data}" 
+                                 onclick="return deleteConfirm(this,'delete')"
+                                 title="Delete"><i class="fas fa-trash"></i></a>
+                           </div>
+                     </div>`
+                        } else if (isDirektur) {
+                            return `<div class="input-group">
+                        <select class="form-select update_status" name="status" required data-id="${data}" data-token="${token}">
+                          <option ${full.status == 'on_progress' ? 'selected' : ''} value="on_progress">On Progress</option>
+                          <option ${full.status == 'accept' ? 'selected' : ''} value="accept">Accept</option>
+                          <option ${full.status == 'reject' ? 'selected' : ''} value="reject">Reject</option>
+                        </select>
+                     
+                      </div>`
+                        } else if (isFinance) {
+                            return `<div class="input-group">
+                        <select class="form-select update_status" name="status" required data-id="${data}" data-token="${token}">
+                          <option value="">Choose...</option>
+                          <option value="done">Done</option>
+                        </select>
+                      </div>`
+                        }
+                    },
+                }
+            ];
+            if (!isStaff) {
+                dataColumns = [{
+                        data: 'id'
+                    },
+                    {
+                        data: 'user.nip'
+                    },
+                    {
+                        data: 'user.name'
+                    },
+                    {
+                        data: 'user.job_title'
+                    },
+                    {
+                        data: 'date_of_submission'
+                    },
+                    {
+                        data: 'reimburshment_name'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'id'
+                    },
+                ];
 
-        }
-        var arrayParams = {
-            idTable: '#table-1',
-            urlAjax: "{{ route('reimburshment.get-data') }}",
-            columns: dataColumns,
-            defColumn: columnDef,
-
-        }
-        loadAjaxDataTables(arrayParams);
-        // table.on('xhr', function() {
-        //     jsonTables = table.ajax.json();
-        //     // console.log( jsonTables.data[350]["id"] +' row(s) were loaded' );
-        // });
-        $('#detailModal').on('show.bs.modal', function(e) {
-            const button = $(e.relatedTarget);
-            let file = button.data('support_file');
-            if (getFileType(file) == 'document') {
-                $('.detail_support_file').html(
-                    `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
-            } else {
-                $('.detail_support_file').html(`<img src="${file}" id="modalImage_detail" class="img-fluid">`);
             }
+            var arrayParams = {
+                idTable: '#table-1',
+                urlAjax: "{{ route('reimburshment.get-data') }}",
+                columns: dataColumns,
+                defColumn: columnDef,
 
-            $('.description_detail').html(button.data('description'))
-        })
-        $('.edit-reimburshment').on('show.bs.modal', function(e) {
-            const button = $(e.relatedTarget);
-            let file = button.data('support_file');
-            if (getFileType(file) == 'document') {
-                $('.detail_support_file_edit').html(
-                    `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
-            } else {
-                $('.detail_support_file_edit').html(`<img src="${file}" id="modalImage_detail" class="img-fluid">`);
             }
-            $('.date_edit').val(button.data('date'))
-            $('.reimburshment_name_edit').val(button.data('reimburshment_name'))
-            $('.description_edit').summernote('pasteHTML', (button.data('description')));
-        })
+            loadAjaxDataTables(arrayParams);
+            // table.on('xhr', function() {
+            //     jsonTables = table.ajax.json();
+            //     // console.log( jsonTables.data[350]["id"] +' row(s) were loaded' );
+            // });
+            $('#detailModal').on('show.bs.modal', function(e) {
+                const button = $(e.relatedTarget);
+                let file = button.data('support_file');
+                if (getFileType(file) == 'document') {
+                    $('.detail_support_file').html(
+                        `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
+                } else {
+                    $('.detail_support_file').html(
+                        `<img src="${file}" id="modalImage_detail" class="img-fluid">`);
+                }
+
+                $('.description_detail').html(button.data('description'))
+            })
+            $('.edit-reimburshment').on('show.bs.modal', function(e) {
+                const button = $(e.relatedTarget);
+                let file = button.data('support_file');
+                if (getFileType(file) == 'document') {
+                    $('.detail_support_file_edit').html(
+                        `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
+                } else {
+                    $('.detail_support_file_edit').html(
+                        `<img src="${file}" id="modalImage_detail" class="img-fluid">`);
+                }
+                $('.date_edit').val(button.data('date'))
+                $('.reimburshment_name_edit').val(button.data('reimburshment_name'))
+                $('.description_edit').summernote('pasteHTML', (button.data('description')));
+            });
+
+
+            $(document).on('change', '.update_status', function() {
+
+                let status = $('.update_status').val();
+                if (status == "") {
+                    alert("Please select status first!");
+                } else {
+                    let token = $(this).data('token');
+                    let id = $(this).data('id');
+                    var arr_params = {
+                        url: "{{ route('reimburshment.update-status') }}",
+                        method: 'POST',
+                        input: {
+                            "_token": token,
+                            "id": id,
+                            "status": status
+                        },
+                        reload: false,
+                        forms: "",
+                    }
+                    ajaxSaveDatas(arr_params)
+                }
+            });
+        });
     </script>
     {{-- <script src="../../dist/js/datatable/datatable-api.init.js"></script> --}}
 @endpush

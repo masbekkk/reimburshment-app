@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('reimburshment_name');
             $table->text('description');
             $table->string('support_file');
-            $table->enum('status', ['on_progress', 'accept', 'reject'])->default('on_progress');
+            $table->enum('status', ['on_progress', 'accept', 'reject', 'done'])->default('on_progress');
             $table->string('notes')->nullable();
             $table->timestamps();
         });

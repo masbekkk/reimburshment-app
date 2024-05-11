@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class ReimburshmentController extends Controller
 {
@@ -24,9 +25,9 @@ class ReimburshmentController extends Controller
     {
         try {
             if (!auth()->user()->hasRoles('staff')) {
-                $reimburshment = Reimburshment::with('user')->get();
+                $reimburshment = Reimburshment::with('user')->orderBy('id', 'ASC')->get();
             }else {
-                $reimburshment = Reimburshment::where('user_id', auth()->user()->id)->with('user')->get();
+                $reimburshment = Reimburshment::with('user')->where('user_id', auth()->user()->id)->orderBy('id', 'ASC')->get();
             }
            
             return response()->json([
@@ -79,9 +80,6 @@ class ReimburshmentController extends Controller
             if ($request->hasFile('support_file')) {
                 $filePath = $request->file('support_file')->store('reimburshment/support_file', 'public');
                 $support_file = 'storage/' . $filePath;
-                // if ($oldFile?->resume !== null) {
-                //     File::delete(public_path($oldFile?->resume));
-                // }
                 $reimburshment->support_file = $support_file;
             }
             $reimburshment->user_id = auth()->user()->id;
@@ -190,6 +188,42 @@ class ReimburshmentController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to delete',
+                'data' => null,
+                'errors' => $errorMessage,
+            ], $statusCode);
+        }
+    }
+
+
+    /**
+     * Update reimburshment status
+     */
+    public function updateStatus(Request $request)
+    {
+        // dd($request->status);
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+                'status' => 'required|in:accept,reject,done',
+            ]);
+           
+            $reimburshment = Reimburshment::findOrFail($request->id);
+            $reimburshment->status = $request->status;
+            $reimburshment->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Status Updated Successfully!', 
+                'data' => $reimburshment
+            ], Response::HTTP_CREATED);
+            
+        } catch (Exception $e) {
+            $errorMessage = $e->getMessage();
+            $statusCode = $e->getCode();
+            Log::error('Error Status Updated reimburshment data: ' . $errorMessage );
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to Status Updated',
                 'data' => null,
                 'errors' => $errorMessage,
             ], $statusCode);
