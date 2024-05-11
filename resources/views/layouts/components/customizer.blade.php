@@ -24,7 +24,7 @@
                 </a>
             </div>
         </div>
-        <div class="theme-direction pb-4">
+        {{-- <div class="theme-direction pb-4">
             <h6 class="fw-semibold fs-4 mb-1">Theme Direction</h6>
             <div class="d-flex align-items-center gap-3 my-3">
                 <a href="./index.html" class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center gap-2">
@@ -37,7 +37,7 @@
                     <span class="text-dark">RTL</span>
                 </a>
             </div>
-        </div>
+        </div> --}}
         <div class="theme-colors pb-4">
             <h6 class="fw-semibold fs-4 mb-1">Theme Colors</h6>
             <div class="d-flex align-items-center gap-3 my-3">
@@ -87,7 +87,7 @@
                 </ul>
             </div>
         </div>
-        <div class="layout-type pb-4">
+        {{-- <div class="layout-type pb-4">
             <h6 class="fw-semibold fs-4 mb-1">Layout Type</h6>
             <div class="d-flex align-items-center gap-3 my-3">
                 <a href="./index.html" class="rounded-2 p-9 customizer-box hover-img d-flex align-items-center gap-2">
@@ -100,7 +100,7 @@
                     <span class="text-dark">Horizontal</span>
                 </a>
             </div>
-        </div>
+        </div> --}}
         <div class="container-option pb-4">
             <h6 class="fw-semibold fs-4 mb-1">Container Option</h6>
             <div class="d-flex align-items-center gap-3 my-3">

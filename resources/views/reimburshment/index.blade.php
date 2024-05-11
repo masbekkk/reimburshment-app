@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="../../dist/libs/summernote/dist/summernote-lite.min.css">
     <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
-@section('title') Data Reimburshment @endsection
+@section('title')
+    Data Reimburshment
+@endsection
 @section('main')
     <!-- detail Modal -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -343,7 +345,8 @@
                            </div>
                      </div>`
                         } else if (isDirektur) {
-                            return `<div class="input-group">
+                            if (full.status !== 'done') {
+                                return `<div class="input-group">
                         <select class="form-select update_status" name="status" required data-id="${data}" data-token="${token}">
                           <option ${full.status == 'on_progress' ? 'selected' : ''} value="on_progress">On Progress</option>
                           <option ${full.status == 'accept' ? 'selected' : ''} value="accept">Accept</option>
@@ -351,6 +354,9 @@
                         </select>
                      
                       </div>`
+                            } else {
+                                return `<span class="badge bg-info rounded-3 fw-semibold fs-2">Finish</span>`
+                            }
                         } else if (isFinance) {
                             if (full.status !== 'done') {
                                 return `<div class="input-group">
