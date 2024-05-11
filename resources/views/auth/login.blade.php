@@ -1,5 +1,6 @@
 @extends('layouts.index')
 
+@section('title') Login @endsection
 @section('auth-page')
     <div class="position-relative overflow-hidden radial-gradient min-vh-100">
         <div class="position-relative z-index-5">

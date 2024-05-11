@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../dist/libs/summernote/dist/summernote-lite.min.css">
     <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
+@section('title') Data Reimburshment @endsection
 @section('main')
     <!-- detail Modal -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -108,7 +109,6 @@
                     <h4 class="fw-semibold mb-8">Data Reimburshment</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-muted " href="./index.html">Dashboard</a></li>
                             <li class="breadcrumb-item" aria-current="page">Reimburshment</li>
                         </ol>
                     </nav>

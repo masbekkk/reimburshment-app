@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../../dist/libs/summernote/dist/summernote-lite.min.css">
     <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
+@section('title') Edit Reimburshment @endsection
 @section('main')
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
         <div class="card-body px-4 py-3">

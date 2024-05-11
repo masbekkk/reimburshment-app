@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../dist/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
+@section('title') Data Employees @endsection
 @section('main')
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
         <div class="card-body px-4 py-3">
@@ -14,8 +15,7 @@
                     <h4 class="fw-semibold mb-8">Data employees</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-muted " href="./index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item" aria-current="page">employees</li>
+                            <li class="breadcrumb-item" aria-current="page">Employees</li>
                         </ol>
                     </nav>
                 </div>

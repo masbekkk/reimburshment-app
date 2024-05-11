@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        return view('layouts.index');
+        return redirect()->route('reimburshment.index');
+        // return view('layouts.index');
     });
     Route::resource('reimburshment', ReimburshmentController::class);
     Route::get('get-reimburshment', [ReimburshmentController::class, 'getReimburshment'])->name('reimburshment.get-data');

@@ -23,7 +23,7 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('reimburshment.index')}}" aria-expanded="false">
                         <span>
-                            <i class="ti ti-aperture"></i>
+                            <i class="ti ti-currency-dollar"></i>
                         </span>
                         <span class="hide-menu">Reimburshment</span>
                     </a>
@@ -38,14 +38,6 @@
                     </a>
                 </li>
                 @endif
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="./index3.html" aria-expanded="false">
-                        <span>
-                            <i class="ti ti-currency-dollar"></i>
-                        </span>
-                        <span class="hide-menu">NFT</span>
-                    </a>
-                </li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
