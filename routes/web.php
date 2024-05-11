@@ -23,7 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::get('get-reimburshment', [ReimburshmentController::class, 'getReimburshment'])->name('reimburshment.get-data');
     Route::post('reimburshment/update-status', [ReimburshmentController::class, 'updateStatus'])->name('reimburshment.update-status');
 
-    Route::resource('employee', EmployeeController::class)->middleware('role:direktur');
+    Route::resource('employees', EmployeeController::class)->middleware('role:direktur');
+    Route::get('get-employees', [EmployeeController::class, 'getEmployees'])->name('employees.get-data')->middleware('role:direktur');
 });
 
 require __DIR__ . '/auth.php';

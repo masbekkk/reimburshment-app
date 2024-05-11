@@ -25,6 +25,7 @@ class RegisteredUserController extends Controller
             'nip' => ['required', 'number', 'max:16', 'unique:'.User::class],
             'job_title' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => 'required|in:finance,staff',
         ]);
 
         $user = User::create([
@@ -35,9 +36,14 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        $user->syncRoles($request->role);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Stored Successfully!', 
+            'data' => $user,
+        ], Response::HTTP_CREATED);
+        // Auth::login($user);
 
-        Auth::login($user);
-
-        return response()->noContent();
+        // return response()->noContent();
     }
 }
