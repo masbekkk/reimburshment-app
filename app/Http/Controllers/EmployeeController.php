@@ -42,7 +42,8 @@ class EmployeeController extends Controller
 
     public function index()
     {
-        return view('employees.index');
+        $roles = Role::where('name', '!=', 'direktur')->get();
+        return view('employees.index', compact('roles'));
     }
 
     public function store(Request $request)

@@ -92,8 +92,9 @@
                                                 <div class="col-md-12 mb-3">
                                                     <select class="form-select update_status" name="role" required>
                                                         <option value="">Choose Role...</option>
-                                                        <option value="finance">Finance</option>
-                                                        <option value="staff">Staff</option>
+                                                        @foreach ($roles as $role)
+                                                        <option value="{{ $role->name }}">{{ ucwords($role->name) }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
 
