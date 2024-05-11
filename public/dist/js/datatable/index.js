@@ -11,7 +11,7 @@ function loadAjaxDataTables(params) {
     }
 
     table = $(params.idTable).DataTable({
-        orderCellsTop: true,
+        // orderCellsTop: true,
         // fixedHeader: (params.responsive ? false : true),
         responsive: params.responsive,
         dom: 'lfrtip',
