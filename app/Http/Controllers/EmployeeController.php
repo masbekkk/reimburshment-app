@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller
 {
@@ -84,15 +85,22 @@ class EmployeeController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        $roles = Role::where('name', '!=', 'direktur')->get();
+        return view('employees.edit', compact('user', 'roles'));
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'integer', 'unique:' . User::class],
+                'nip' => ['required', 'integer'],
                 'job_title' => ['required', 'string', 'max:255'],
                 'role' => 'required|in:finance,staff',
             ] + ($request->filled('password') ? ['password' => ['required', 'confirmed', Password::defaults()]] : []));
@@ -100,10 +108,14 @@ class EmployeeController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-            $user->update([
-                'name' => $request->name,
-                'email' => $request->email,
-            ] + ($request->filled('password') ? ['password' => Hash::make($request->password)] : []));
+            $user = User::findOrFail($id);
+            $user->name = $request->name;
+            $user->nip = $request->nip;
+            $user->job_title = $request->job_title;
+            if($request->filled('password'))
+            $user->password = Hash::make($request->password);
+
+            $user->save();
 
             $user->syncRoles($request->role);
 

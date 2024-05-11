@@ -7,72 +7,6 @@
     <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
 @section('main')
-    {{-- <!-- Edit employees Popup Model -->
-    <div class="edit-employees modal fade" id="vertical-center-scroll-modal" tabindex="-1"
-        aria-labelledby="vertical-center-modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <form class="form-horizontal form-material" id="form_update_employees"
-                    action="{{ route('employees.store') }}" method="POST" data-modal="dd-employees">
-                    <div class="modal-header d-flex align-items-center">
-                        <h4 class="modal-title" id="myLargeModalLabel">
-                            Vertically centered scrollable Modal
-                        </h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                        @csrf
-                        <div class="form-group">
-                            <label>Date Of Submission</label>
-                            <div class="col-md-12 mb-3">
-                                <input type="date" name="date_of_submission" class="form-control date_edit"
-                                    placeholder="date of submission" />
-                            </div>
-                            <label>employees Name</label>
-                            <div class="col-md-12 mb-3">
-                                <input type="text" name="employees_name" class="form-control employees_name_edit"
-                                    placeholder="employees Name" />
-                            </div>
-                            <label>Description</label>
-                            <div class="col-md-12 mb-3">
-                                <textarea name="description" class="description_edit editor"></textarea>
-                            </div>
-                            <label>Support File</label>
-                            <span class="badge bg-warning">*Upload
-                                Support File Only When you Wanna Change the Support File</span>
-                            <small>
-                                <p class="mb-0">Previous Support File:</p>
-                            </small>
-                            <div class="detail_support_file_edit mt-0 mb-3"></div>
-                            <div class="col-md-12 mb-3">
-                                <div
-                                    class="
-                            fileupload
-                            btn btn-danger btn-rounded
-                            waves-effect waves-light
-                            btn-sm
-                            ">
-                                    <span><i class="ion-upload m-r-5"></i>Upload
-                                        Support File</span>
-                                    <input type="file" class="upload" name="support_file" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-info waves-effect" data-bs-dismiss="modal">
-                            Save
-                        </button>
-                        <button type="button" class="btn btn-default waves-effect" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> --}}
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
@@ -132,27 +66,27 @@
                                                 <label>NIP</label>
                                                 <div class="col-md-12 mb-3">
                                                     <input type="number" name="nip" class="form-control"
-                                                        placeholder="NIP" />
+                                                        placeholder="NIP" required />
                                                 </div>
                                                 <label>Employees Name</label>
                                                 <div class="col-md-12 mb-3">
                                                     <input type="text" name="name" class="form-control"
-                                                        placeholder="employees Name" />
+                                                        placeholder="employees Name" required />
                                                 </div>
                                                 <label>Job Title</label>
                                                 <div class="col-md-12 mb-3">
                                                     <input type="text" name="job_title" class="form-control"
-                                                        placeholder="Job title" />
+                                                        placeholder="Job title" required />
                                                 </div>
                                                 <label>Password</label>
                                                 <div class="col-md-12 mb-3">
                                                     <input type="password" name="password" class="form-control"
-                                                        placeholder="Password" />
+                                                        placeholder="Password" required/>
                                                 </div>
                                                 <label>Confirm Password</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="password" name="password_confirmation" class="form-control"
-                                                        placeholder="Password" />
+                                                    <input type="password" name="password_confirmation"
+                                                        class="form-control" placeholder="Password" required />
                                                 </div>
                                                 <label>Role User</label>
                                                 <div class="col-md-12 mb-3">
@@ -276,7 +210,6 @@
                            <div class="col-12 d-flex">
                               <a class="btn btn-warning btn-lg mr-1"
                                  href="/employees/${data}/edit" 
-
                                  data-id=${data}
                                  data-date="${full.date_of_submission}" data-employees_name="${full.employees_name}"
                                  data-description="${full.description}" data-support_file="${full.support_file}" data-url="/project/${data}"
@@ -302,21 +235,6 @@
             //     jsonTables = table.ajax.json();
             //     // console.log( jsonTables.data[350]["id"] +' row(s) were loaded' );
             // });
-
-            $('.edit-employees').on('show.bs.modal', function(e) {
-                const button = $(e.relatedTarget);
-                let file = button.data('support_file');
-                if (getFileType(file) == 'document') {
-                    $('.detail_support_file_edit').html(
-                        `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
-                } else {
-                    $('.detail_support_file_edit').html(
-                        `<img src="${file}" id="modalImage_detail" class="img-fluid">`);
-                }
-                $('.date_edit').val(button.data('date'))
-                $('.employees_name_edit').val(button.data('employees_name'))
-                $('.description_edit').summernote('pasteHTML', (button.data('description')));
-            });
 
         });
     </script>
