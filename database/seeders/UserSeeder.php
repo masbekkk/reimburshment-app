@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         ];
 
         $direktur = User::create($users[0]);
-        $direktur->syncRoles('direktur');
+        $direktur->syncRoles(['direktur', 'super admin']);
 
         $direktur = User::create($users[1]);
         $direktur->syncRoles('finance');

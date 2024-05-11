@@ -2,35 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class EmployeeController extends Controller
+class RolesController extends Controller
 {
-    public function getEmployees()
+    public function getRoles()
     {
         try {
-            $roleNames = ['staff', 'finance'];
-            $usersWithRoles = User::with('roles')->whereHas('roles', function ($query) use ($roleNames) {
-                $query->whereIn('name', $roleNames);
-            })->orWhereDoesntHave('roles')->with('roles')->get();
-
+            $roles = Role::with('permissions')->get();
+          
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Retrieved Successfully!',
-                'data' => $usersWithRoles
+                'message' => 'Data Retrieved Successfully!', 
+                'data' => $roles
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-
-            Log::error('Error retrieve users data: ' . $errorMessage);
+           
+            Log::error('Error retrieve roles data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to retrieve',
@@ -39,44 +34,49 @@ class EmployeeController extends Controller
             ], 500);
         }
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $roles = Role::whereNotIn('name', ['direktur', 'super admin'])->get();
-        return view('employees.index', compact('roles'));
+        $permissions = Permission::all();
+        return view('rbac.roles', compact('permissions'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'integer', 'unique:' . User::class],
-                'job_title' => ['required', 'string', 'max:255'],
-                'password' => ['required', 'confirmed', Password::defaults()],
-                'role' => 'required|in:finance,staff',
+                'name' => ['required', 'string', 'max:255', 'unique:' . Role::class],
             ]);
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->nip = $request->nip;
-            $user->job_title = $request->job_title;
-            $user->password = Hash::make($request->password);
-            $user->save();
+            $role = Role::create(['name' => $request->name]);
+            $role->syncPermissions($request->input('permission'));
 
-            $user->syncRoles($request->role);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Stored Successfully!',
-                'data' => $user,
+                'data' => $role,
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
 
-            Log::error('Error store empployee data: ' . $errorMessage);
+            Log::error('Error store role data: ' . $errorMessage);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to store',
@@ -86,52 +86,51 @@ class EmployeeController extends Controller
         }
     }
 
-    public function edit($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
-        $user = User::findOrFail($id);
-        $roles = Role::whereNotIn('name', ['direktur', 'super admin'])->get();
-        return view('employees.edit', compact('user', 'roles'));
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'integer'],
-                'job_title' => ['required', 'string', 'max:255'],
-                'role' => 'required|in:finance,staff',
-            ] + ($request->filled('password') ? ['password' => ['required', 'confirmed', Password::defaults()]] : []));
+            ]);
 
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-            $user = User::findOrFail($id);
-            $user->name = $request->name;
-            $user->nip = $request->nip;
-            $user->job_title = $request->job_title;
-            if($request->filled('password'))
-            $user->password = Hash::make($request->password);
 
-            $user->save();
-
-            $user->syncRoles($request->role);
+            $role = Role::updateOrCreate(['name' => $request->name]);
+            $role->syncPermissions($request->input('permission'));
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Updated Successfully!',
-                'data' => $user,
+                'data' => $role,
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
 
-            Log::error('Error update empployee data: ' . $errorMessage);
+            Log::error('Error store role data: ' . $errorMessage);
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to update',
+                'message' => 'Failed to store',
                 'data' => null,
                 'errors' => $errorMessage,
             ], 500);
@@ -141,11 +140,11 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
         try {
-            $user = User::findOrFail($id);
-            $user->delete();
+           
+            $role->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Deleted Successfully!',
@@ -154,7 +153,7 @@ class EmployeeController extends Controller
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
 
-            Log::error('Error delete user data: ' . $errorMessage);
+            Log::error('Error delete role data: ' . $errorMessage);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to delete',
