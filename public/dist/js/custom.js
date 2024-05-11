@@ -136,3 +136,20 @@ function toggleTheme(value) {
   $(".preloader").fadeOut();
 }
 $(".preloader").fadeOut();
+
+function getFileType(url) {
+  // Extract the file extension
+  const extension = url.split('.').pop().toLowerCase();
+
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+  const documentExtensions = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
+
+  if (imageExtensions.includes(extension)) {
+    return 'image';
+  }
+
+  if (documentExtensions.includes(extension)) {
+    return 'document';
+  }
+  return 'unknown';
+}

@@ -7,13 +7,14 @@ use App\Models\Reimburshment;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
 class ReimburshmentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:direktur|finance')->except(['index', 'getReimburshment', 'store', 'update', 'destroy']);
+        $this->middleware('role:direktur|finance')->except(['index', 'getReimburshment', 'store', 'edit','update', 'destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -28,11 +29,21 @@ class ReimburshmentController extends Controller
                 $reimburshment = Reimburshment::where('user_id', auth()->user()->id)->with('user')->get();
             }
            
-            return response()->json(['data' => $reimburshment], Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Retrieved Successfully!', 
+                'data' => $reimburshment
+            ], Response::HTTP_OK);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             $statusCode = $e->getCode();
-            return response()->json(['error' => $errorMessage], $statusCode);
+            Log::error('Error retrieve reimburshment data: ' . $errorMessage );
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve',
+                'data' => null,
+                'errors' => $errorMessage,
+            ], $statusCode);
         }
     }
 
@@ -77,7 +88,7 @@ class ReimburshmentController extends Controller
             $reimburshment->save();
 
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Data Stored Successfully!', 
                 'data' => $reimburshment
             ], Response::HTTP_CREATED);
@@ -108,7 +119,7 @@ class ReimburshmentController extends Controller
      */
     public function edit(Reimburshment $reimburshment)
     {
-        
+        return view('reimburshment.edit', compact('reimburshment'));
     }
 
     /**
@@ -117,14 +128,29 @@ class ReimburshmentController extends Controller
     public function update(Request $request, Reimburshment $reimburshment)
     {
         try {
+            $request->validate([
+                'date_of_submission' => 'required|date',
+                'reimburshment_name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'support_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
+            ]);
+            // $reimburshment = Reimburshment::findOrFail($reimburshment->id);
             $reimburshment->date_of_submission = $request->date_of_submission;
             $reimburshment->reimburshment_name = $request->reimburshment_name;
             $reimburshment->description = $request->description;
-            $reimburshment->support_file = $request->support_file;
-            $reimburshment->save();
+            if ($request->hasFile('support_file')) {
+                $filePath = $request->file('support_file')->store('reimburshment/support_file', 'public');
+                $support_file = 'storage/' . $filePath;
+                if ($reimburshment->support_file !== null && File::exists($reimburshment->support_file)) {
+                    File::delete(public_path($reimburshment->support_file));
+                }
+                $reimburshment->support_file = $support_file;
+            }
+            $reimburshment->user_id = auth()->user()->id;
+            $reimburshment->update();
 
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Data Updated Successfully!', 
                 'data' => $reimburshment
             ], Response::HTTP_CREATED);
@@ -147,10 +173,12 @@ class ReimburshmentController extends Controller
     public function destroy(Reimburshment $reimburshment)
     {
         try {
-          
+            if ($reimburshment->support_file !== null && File::exists($reimburshment->support_file)) {
+                File::delete(public_path($reimburshment->support_file));
+            }
             $reimburshment->delete();
             return response()->json([
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Data Deleted Successfully!', 
                 'data' => null
             ], Response::HTTP_OK);
