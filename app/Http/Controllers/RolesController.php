@@ -116,7 +116,8 @@ class RolesController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $role = Role::updateOrCreate(['name' => $request->name]);
+            $role->name = $request->name;
+            $role->update();
             $role->syncPermissions($request->input('permission'));
 
             return response()->json([

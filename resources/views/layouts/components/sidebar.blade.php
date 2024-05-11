@@ -47,6 +47,14 @@
                         <span class="hide-menu">Roles</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('permissions.index')}}" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-key"></i>
+                        </span>
+                        <span class="hide-menu">Permissions</span>
+                    </a>
+                </li>
                 @endif
             </ul>
         </nav>
