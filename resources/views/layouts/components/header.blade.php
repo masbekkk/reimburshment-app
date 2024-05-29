@@ -33,7 +33,7 @@
                             aria-expanded="false">
                             <div class="d-flex align-items-center">
                                 <div class="user-profile-img">
-                                    <img src="../../dist/images/profile/user-{{ (auth()->user()->hasRoles('staff') ? '9' : '1') }}.jpg" class="rounded-circle"
+                                    <img src="../../dist/images/profile/user-{{ (auth()->user()->hasRoles('admin') ? '9' : '1') }}.jpg" class="rounded-circle"
                                         width="35" height="35" alt="" />
                                 </div>
                             </div>
@@ -45,13 +45,13 @@
                                     <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
                                 </div>
                                 <div class="d-flex align-items-center py-9 mx-7 border-bottom">
-                                    <img src="../../dist/images/profile/user-{{ (auth()->user()->hasRoles('staff') ? '9' : '1') }}.jpg" class="rounded-circle"
+                                    <img src="../../dist/images/profile/user-{{ (auth()->user()->hasRoles('admin') ? '9' : '1') }}.jpg" class="rounded-circle"
                                         width="80" height="80" alt="" />
                                     <div class="ms-3">
                                         <h5 class="mb-1 fs-3">{{ auth()->user()->name }}</h5>
                                         <span class="mb-1 d-block text-dark">{{ auth()->user()->job_title }}</span>
                                         <p class="mb-0 d-flex text-dark align-items-center gap-2">
-                                            <i class="ti ti-user fs-4"></i> NIP: {{ auth()->user()->nip }}
+                                            <i class="ti ti-user fs-4"></i>Username: {{ auth()->user()->username }}
                                         </p>
                                     </div>
                                 </div>

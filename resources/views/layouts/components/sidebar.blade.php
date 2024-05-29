@@ -23,7 +23,7 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('vehicle-loan.index')}}" aria-expanded="false">
                         <span>
-                            <i class="ti ti-currency-dollar"></i>
+                            <i class="ti ti-truck"></i>
                         </span>
                         <span class="hide-menu">Vehicle Loan</span>
                     </a>
