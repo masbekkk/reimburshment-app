@@ -4,6 +4,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\VehicleLoanController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('vehicle-loan', VehicleLoanController::class);
     Route::get('get-vehicle-loan', [VehicleLoanController::class, 'getVehicleLoan'])->name('vehicle-loan.get-data');
     Route::post('vehicle-loan/update-status', [VehicleLoanController::class, 'updateStatus'])->name('vehicle-loan.update-status');
+
+    Route::resource('vehicles', VehicleController::class);
+    Route::get('get-vehicle', [VehicleController::class, 'getVehicles'])->name('vehicles.get-data');
 
     Route::middleware('role:direktur')->group(function () {
         Route::resource('employees', EmployeeController::class);

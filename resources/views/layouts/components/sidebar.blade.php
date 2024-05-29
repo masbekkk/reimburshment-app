@@ -28,13 +28,22 @@
                         <span class="hide-menu">Vehicle Loan</span>
                     </a>
                 </li>
-                @if(auth()->user()->hasPermission('create admin account'))
+                
+                @if(auth()->user()->hasRoles('super admin'))
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('employees.index')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-users"></i>
                         </span>
                         <span class="hide-menu">Employees</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('vehicles.index')}}" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-users"></i>
+                        </span>
+                        <span class="hide-menu">Vehicles</span>
                     </a>
                 </li>
                 @endif
