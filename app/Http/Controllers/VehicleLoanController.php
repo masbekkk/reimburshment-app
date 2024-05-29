@@ -82,6 +82,7 @@ class VehicleLoanController extends Controller
             $vehicleLoan->vehicle_id = $request->vehicle_id;
             $vehicleLoan->stakeholder_id = $request->stakeholder_id;
             $vehicleLoan->user_id = auth()->user()->id;
+            $vehicleLoan->notes = $request->notes;
             $vehicleLoan->save();
 
             return response()->json([
@@ -133,6 +134,7 @@ class VehicleLoanController extends Controller
             $vehicleLoan->notes = $request->notes;
             $vehicleLoan->vehicle_id = $request->vehicle_id;
             $vehicleLoan->stakeholder_id = $request->stakeholder_id;
+            $vehicleLoan->notes = $request->notes;
             $vehicleLoan->user_id = auth()->user()->id;
             $vehicleLoan->update();
 

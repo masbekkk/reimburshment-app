@@ -65,7 +65,7 @@
                                             <div class="form-group">
                                                 <label>Username</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="number" name="username" class="form-control"
+                                                    <input type="text" name="username" class="form-control"
                                                         placeholder="Username" required />
                                                 </div>
                                                 <label>Employees Name</label>

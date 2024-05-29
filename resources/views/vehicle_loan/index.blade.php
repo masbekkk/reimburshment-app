@@ -23,12 +23,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Support File</label>
-                        <div class="detail_support_file"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <p class="description_detail"></p>
+                        <label>Notes</label>
+                        <p class="notes_detail"></p>
                     </div>
 
                 </div>
@@ -82,7 +78,7 @@
                                 <div class="modal-content">
                                     <form class="form-horizontal form-material" id="form_store_vehicle-loan"
                                         action="{{ route('vehicle-loan.store') }}" method="POST"
-                                        data-modal="dd-reimburshment">
+                                        data-modal="add-reimburshment">
                                         <div class="modal-header d-flex align-items-center">
                                             <h4 class="modal-title" id="myModalLabel">
                                                 Add New Vehicle Loan
@@ -116,7 +112,71 @@
                                                 </div>
                                                 <label>Notes</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <textarea name="description" class="editor"></textarea>
+                                                    <textarea name="notes" class="editor"></textarea>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-info waves-effect"
+                                                data-bs-dismiss="modal">
+                                                Save
+                                            </button>
+                                            <button type="button" class="btn btn-default waves-effect"
+                                                data-bs-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        {{-- Edit Vehicle Loan Popup Modal --}}
+                        <div id="scroll-long-outer-modal" class="modal fade in edit-vehicle-loan-modal" tabindex="-1"
+                            role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <form class="form-horizontal form-material" id="form_update_vehicle-loan"
+                                        action="" method="POST"
+                                        data-modal="edit-vehicle-loan-modal">
+                                        @method('PUT')
+                                        <div class="modal-header d-flex align-items-center">
+                                            <h4 class="modal-title" id="myModalLabel">
+                                                Edit Vehicle Loan
+                                            </h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            @csrf
+                                            <div class="form-group">
+                                                <label>Stakeholder Name</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <select class="form-control select2 stakeholder_id_edit" name="stakeholder_id" required>
+                                                        <option value="">Choose Stakeholder....</option>
+                                                        @foreach ($stakeholders as $stakeholder)
+                                                            <option value="{{ $stakeholder->id }}">{{ $stakeholder->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <label>Vehicle Name</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <select class="form-control select2 vehicle_id_edit" name="vehicle_id" required>
+                                                        <option value="">Choose Vehicle....</option>
+                                                        @foreach ($vehicles as $vehicle)
+                                                            <option value="{{ $vehicle->id }}">{{ $vehicle->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <label>Notes</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <textarea name="notes" class="editor notes_edit"></textarea>
                                                 </div>
 
                                             </div>
@@ -201,6 +261,26 @@
                 ajaxSaveDatas(arr_params)
                 $('.editor').summernote('code', '');
             });
+
+            $('#form_update_vehicle-loan').submit(function(e) {
+                e.preventDefault();
+                // alert($(this).data('modal'))
+
+                let form = $(this);
+                console.log(form.serialize())
+                // var form_data = new FormData($('#form_store_vehicle-loan')[0]);
+                var arr_params = {
+                    url: form.attr('action'),
+                    method: 'PUT',
+                    input: form.serialize(),
+                    forms: form[0],
+                    modal: $('.' + form.data('modal')).modal('hide'),
+                    reload: false,
+                }
+                ajaxSaveDatas(arr_params)
+                $('.editor').summernote('code', '');
+            });
+
             const isStaff = "{{ auth()->user()->hasRoles('admin') }}";
             const isDirektur = "{{ auth()->user()->hasRoles('direktur') }}";
             const isFinance = "{{ auth()->user()->hasRoles('finance') }}";
@@ -249,7 +329,7 @@
                     targets: [(isStaff ? 4 : 7)],
                     data: 'link',
                     render: function(data, type, full, meta) {
-                        return `<a href="#detailProject" data-bs-toggle="modal" data-bs-target="#detailModal" class="btn btn-info" data-description="${full.description}" data-support_file="${window.location.origin + '/' + full.support_file}" ><i class="fas fa-eye"></i> Tap to View</a>`
+                        return `<a href="#detailProject" data-bs-toggle="modal" data-bs-target="#detailModal" class="btn btn-info" data-notes="${full.notes}"><i class="fas fa-eye"></i> Tap to View</a>`
                     }
                 },
                 {
@@ -261,12 +341,10 @@
                         if (isStaff) {
                             return `<div class="row w-100">
                            <div class="col-12 d-flex">
-                              <a class="btn btn-warning btn-lg mr-1"
-                                 href="/reimburshment/${data}/edit" 
-                                 
-                                 data-id=${data}
-                                 data-date="${full.date_of_submission}" data-reimburshment_name="${full.reimburshment_name}"
-                                 data-description="${full.description}" data-support_file="${full.support_file}" data-url="/project/${data}"
+                              <a class="btn btn-warning btn-lg mr-1 edit_vehicle-btn"
+                                 href="#editVehicleLoan" data-bs-toggle="modal" data-bs-target=".edit-vehicle-loan-modal"
+                                 data-id="${data}"" data-notes="${full.notes}" data-url="/vehicle-loan/${data}"
+                                data-vehicle_id="${full.vehicle_id}" data-stakeholder_id="${full.stakeholder_id}" 
                                  title="Edit"><i class="fas fa-edit"></i></a>
                               <a class="btn btn-danger btn-lg ml-1"
                                  href="#deleteData" data-delete-url="/vehicle-loan/${data}" 
@@ -307,7 +385,7 @@
                         data: 'id'
                     },
                     {
-                        data: 'user.nip'
+                        data: 'user.username'
                     },
                     {
                         data: 'user.name'
@@ -347,30 +425,18 @@
             // });
             $('#detailModal').on('show.bs.modal', function(e) {
                 const button = $(e.relatedTarget);
-                let file = button.data('support_file');
-                if (getFileType(file) == 'document') {
-                    $('.detail_support_file').html(
-                        `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
-                } else {
-                    $('.detail_support_file').html(
-                        `<img src="${file}" id="modalImage_detail" class="img-fluid">`);
-                }
-
-                $('.description_detail').html(button.data('description'))
+                console.log(button.data('notes'))
+                $('.notes_detail').html(button.data('notes'))
             })
-            $('.edit-reimburshment').on('show.bs.modal', function(e) {
+            $('.edit-vehicle-loan-modal').on('show.bs.modal', function(e) {
                 const button = $(e.relatedTarget);
-                let file = button.data('support_file');
-                if (getFileType(file) == 'document') {
-                    $('.detail_support_file_edit').html(
-                        `<a href="${file}" class="btn btn-primary" target="_blank">Show File</a>`)
-                } else {
-                    $('.detail_support_file_edit').html(
-                        `<img src="${file}" id="modalImage_detail" class="img-fluid">`);
-                }
-                $('.date_edit').val(button.data('date'))
-                $('.reimburshment_name_edit').val(button.data('reimburshment_name'))
-                $('.description_edit').summernote('pasteHTML', (button.data('description')));
+                // console.log(button.data('vehicle_id'))
+                $('#form_update_vehicle-loan').attr('action', button.data('url'))
+                $('.notes_edit').summernote('code', '');
+                $('.vehicle_id_edit').val(button.data('vehicle_id')).trigger('change')
+                $('.stakeholder_id_edit').val(button.data('stakeholder_id')).trigger('change')
+                if (button.data('notes') != null)
+                $('.notes_edit').summernote('pasteHTML', (button.data('notes')));
             });
 
 
