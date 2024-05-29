@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('reimburshment.index');
         // return view('layouts.index');
     });
-    Route::resource('reimburshment', ReimburshmentController::class);
+    Route::resource('vehicle-loan', ReimburshmentController::class);
     Route::get('get-reimburshment', [ReimburshmentController::class, 'getReimburshment'])->name('reimburshment.get-data');
     Route::post('reimburshment/update-status', [ReimburshmentController::class, 'updateStatus'])->name('reimburshment.update-status');
 

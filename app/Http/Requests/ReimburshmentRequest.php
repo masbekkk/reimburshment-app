@@ -22,10 +22,6 @@ class ReimburshmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date_of_submission' => 'required|date',
-            'reimburshment_name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'support_file' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048',
             'status' => 'nullable|in:on_progress,accept,reject',
             'notes' => 'nullable|string|max:255',
         ];

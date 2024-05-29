@@ -3,38 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReimburshmentRequest;
-use App\Models\Reimburshment;
+use App\Models\VehicleLoan;
 use App\Models\User;
+use App\Models\Vehicle;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 
-class ReimburshmentController extends Controller
+class VehicleLoanController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:direktur|finance')->except(['index', 'getReimburshment', 'store', 'edit','update', 'destroy']);
+        $this->middleware('role:direktur|stakeholder')->except(['index', 'getVehicleLoan', 'store', 'edit','update', 'destroy']);
     }
     /**
      * Display a listing of the resource.
      */
 
-    public function getReimburshment()
+    public function getVehicleLoan()
     {
         try {
-            if (!auth()->user()->hasRoles('staff')) {
-                $reimburshment = Reimburshment::with('user')->orderBy('id', 'ASC')->get();
+            if (!auth()->user()->hasRoles('admin')) {
+                $vehicleLoan = VehicleLoan::with('user')->orderBy('id', 'ASC')->get();
             }else {
-                $reimburshment = Reimburshment::with('user')->where('user_id', auth()->user()->id)->orderBy('id', 'ASC')->get();
+                $vehicleLoan = VehicleLoan::with('user')->where('user_id', auth()->user()->id)->orderBy('id', 'ASC')->get();
             }
            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Retrieved Successfully!', 
-                'data' => $reimburshment
+                'data' => $vehicleLoan
             ], Response::HTTP_OK);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
@@ -56,7 +56,7 @@ class ReimburshmentController extends Controller
      */
     public function index()
     {
-        return view('reimburshment.index');
+        return view('vehicle_loan.index');
     }
 
     /**
@@ -73,23 +73,17 @@ class ReimburshmentController extends Controller
     public function store(ReimburshmentRequest $request)
     {
         try {
-            $reimburshment = new Reimburshment();
+            $vehicleLoan = new VehicleLoan();
 
-            $reimburshment->date_of_submission = $request->date_of_submission;
-            $reimburshment->reimburshment_name = $request->reimburshment_name;
-            $reimburshment->description = $request->description;
-            if ($request->hasFile('support_file')) {
-                $filePath = $request->file('support_file')->store('reimburshment/support_file', 'public');
-                $support_file = 'storage/' . $filePath;
-                $reimburshment->support_file = $support_file;
-            }
-            $reimburshment->user_id = auth()->user()->id;
-            $reimburshment->save();
+            $vehicleLoan->notes = $request->notes;
+            $vehicleLoan->vehicle_id = $request->vehicle_id;
+            $vehicleLoan->user_id = auth()->user()->id;
+            $vehicleLoan->save();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Stored Successfully!', 
-                'data' => $reimburshment
+                'data' => $vehicleLoan
             ], Response::HTTP_CREATED);
             
         } catch (Exception $e) {
@@ -108,7 +102,7 @@ class ReimburshmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Reimburshment $reimburshment)
+    public function show(VehicleLoan $vehicleLoan)
     {
         //
     }
@@ -116,42 +110,31 @@ class ReimburshmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Reimburshment $reimburshment)
+    public function edit(VehicleLoan $vehicleLoan)
     {
-        return view('reimburshment.edit', compact('reimburshment'));
+        $vehicles = Vehicle::all();
+        return view('vehicle_loan.edit', compact('vehicle'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reimburshment $reimburshment)
+    public function update(Request $request, VehicleLoan $vehicleLoan)
     {
         try {
             $request->validate([
-                'date_of_submission' => 'required|date',
-                'reimburshment_name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'support_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
+                'notes' => 'nullable|string',
             ]);
-            // $reimburshment = Reimburshment::findOrFail($reimburshment->id);
-            $reimburshment->date_of_submission = $request->date_of_submission;
-            $reimburshment->reimburshment_name = $request->reimburshment_name;
-            $reimburshment->description = $request->description;
-            if ($request->hasFile('support_file')) {
-                $filePath = $request->file('support_file')->store('reimburshment/support_file', 'public');
-                $support_file = 'storage/' . $filePath;
-                if ($reimburshment->support_file !== null && File::exists($reimburshment->support_file)) {
-                    File::delete(public_path($reimburshment->support_file));
-                }
-                $reimburshment->support_file = $support_file;
-            }
-            $reimburshment->user_id = auth()->user()->id;
-            $reimburshment->update();
+            // $vehicleLoan = VehicleLoan::findOrFail($vehicleLoan->id);
+            $vehicleLoan->notes = $request->notes;
+            $vehicleLoan->vehicle_id = $request->vehicle_id;
+            $vehicleLoan->user_id = auth()->user()->id;
+            $vehicleLoan->update();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Updated Successfully!', 
-                'data' => $reimburshment
+                'data' => $vehicleLoan
             ], Response::HTTP_CREATED);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
@@ -169,13 +152,10 @@ class ReimburshmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reimburshment $reimburshment)
+    public function destroy(VehicleLoan $vehicleLoan)
     {
         try {
-            if ($reimburshment->support_file !== null && File::exists($reimburshment->support_file)) {
-                File::delete(public_path($reimburshment->support_file));
-            }
-            $reimburshment->delete();
+            $vehicleLoan->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Deleted Successfully!', 
@@ -208,14 +188,14 @@ class ReimburshmentController extends Controller
                 'status' => 'required|in:accept,reject,done',
             ]);
            
-            $reimburshment = Reimburshment::findOrFail($request->id);
-            $reimburshment->status = $request->status;
-            $reimburshment->save();
+            $vehicleLoan = VehicleLoan::findOrFail($request->id);
+            $vehicleLoan->status = $request->status;
+            $vehicleLoan->save();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Status Updated Successfully!', 
-                'data' => $reimburshment
+                'data' => $vehicleLoan
             ], Response::HTTP_CREATED);
             
         } catch (Exception $e) {

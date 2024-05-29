@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reimburshments', function (Blueprint $table) {
+        Schema::create('vehicle_loan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->date('date_of_submission');
-            $table->string('reimburshment_name');
-            $table->text('description');
-            $table->string('support_file');
+            $table->foreignId('vehicle_id');
             $table->enum('status', ['on_progress', 'accept', 'reject', 'done'])->default('on_progress');
             $table->string('notes')->nullable();
             $table->timestamps();
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reimburshments');
+        Schema::dropIfExists('vehicle_loan');
     }
 };
