@@ -97,6 +97,59 @@
                             </div>
                             <!-- /.modal-dialog -->
                         </div>
+                        <!-- Edit Vehicles Popup Model -->
+                        <div id="scroll-long-outer-modal" class="modal fade in edit-Vehicles" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                <div class="modal-content">
+                                    <form class="form-horizontal form-material" id="form_update_Vehicles"
+                                        action="" method="POST" data-modal="edit-Vehicles">
+                                        <div class="modal-header d-flex align-items-center">
+                                            <h4 class="modal-title" id="myModalLabel">
+                                                Edit Vehicle
+                                            </h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="form-group">
+                                               
+                                                <label>Vehicles Name</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <input type="text" name="name" class="form-control name_edit"
+                                                        placeholder="Vehicles Name" required />
+                                                </div>
+                                                <label>Fuel Type</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <input type="text" name="fuel_type" class="form-control fuel_type_edit"
+                                                        placeholder="Fuel Type" required />
+                                                </div>
+                                                <label>Fuel Capacity</label>
+                                                <div class="col-md-12 mb-3">
+                                                    <input type="number" name="fuel_capacity" class="form-control fuel_capacity_edit"
+                                                        placeholder="Fuel Capacity" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-info waves-effect"
+                                                data-bs-dismiss="modal">
+                                                Save
+                                            </button>
+                                            <button type="button" class="btn btn-default waves-effect"
+                                                data-bs-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
                         <div class="table-responsive">
                             <table id="table-1"
                                 class="table table-striped table-bordered border text-inputs-searching text-nowrap">
@@ -145,6 +198,29 @@
                 }
                 ajaxSaveDatas(arr_params)
             });
+            $('#form_update_Vehicles').submit(function(e) {
+                e.preventDefault();
+                // alert($(this).data('modal'))
+
+                let form = $(this);
+                var arr_params = {
+                    url: form.attr('action'),
+                    method: 'PUT',
+                    input: form.serialize(),
+                    forms: form[0],
+                    modal: $('.' + form.data('modal')).modal('hide'),
+                    reload: false,
+                }
+                ajaxSaveDatas(arr_params)
+            });
+            $('.edit-Vehicles').on('show.bs.modal', function(e) {
+                const button = $(e.relatedTarget);
+                // console.log(button.data('vehicle_id'))
+                $('#form_update_Vehicles').attr('action', button.data('url'))
+                $('.fuel_type_edit').val(button.data('fuel_type'))
+                $('.fuel_capacity_edit').val(button.data('fuel_capacity'))
+                $('.name_edit').val(button.data('name'))
+            });
 
             var dataColumns = [{
                     data: 'id'
@@ -177,10 +253,10 @@
                         return `<div class="row w-100">
                            <div class="col-12 d-flex">
                               <a class="btn btn-warning btn-lg mr-1"
-                                 href="/Vehicles/${data}/edit" 
-                                 data-id=${data}
-                                 data-date="${full.date_of_submission}" data-Vehicles_name="${full.Vehicles_name}"
-                                 data-description="${full.description}" data-support_file="${full.support_file}" data-url="/project/${data}"
+                                 href="#editVehicle" 
+                                 data-id="${data}" data-bs-toggle="modal" data-bs-target=".edit-Vehicles" data-name="${full.name}" 
+                                 data-fuel_type="${full.fuel_type}" data-fuel_capacity="${full.fuel_capacity}"
+                                data-url="/vehicles/${data}"
                                  title="Edit"><i class="fas fa-edit"></i></a>
                               <a class="btn btn-danger btn-lg ml-1"
                                  href="#deleteData" data-delete-url="/vehicles/${data}" 

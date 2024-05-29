@@ -41,7 +41,7 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('vehicles.index')}}" aria-expanded="false">
                         <span>
-                            <i class="ti ti-users"></i>
+                            <i class="ti ti-car"></i>
                         </span>
                         <span class="hide-menu">Vehicles</span>
                     </a>
