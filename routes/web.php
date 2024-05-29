@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ReimburshmentController;
+use App\Http\Controllers\VehicleLoanController;
 use App\Http\Controllers\RolesController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        return redirect()->route('reimburshment.index');
+        return redirect()->route('vehicle-loan.index');
         // return view('layouts.index');
     });
-    Route::resource('vehicle-loan', ReimburshmentController::class);
-    Route::get('get-reimburshment', [ReimburshmentController::class, 'getReimburshment'])->name('reimburshment.get-data');
-    Route::post('reimburshment/update-status', [ReimburshmentController::class, 'updateStatus'])->name('reimburshment.update-status');
+    Route::resource('vehicle-loan', VehicleLoanController::class);
+    Route::get('get-vehicle-loan', [VehicleLoanController::class, 'getReimburshment'])->name('vehicle-loan.get-data');
+    Route::post('vehicle-loan/update-status', [VehicleLoanController::class, 'updateStatus'])->name('vehicle-loan.update-status');
 
     Route::middleware('role:direktur')->group(function () {
         Route::resource('employees', EmployeeController::class);

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../../dist/libs/sweetalert2/dist/sweetalert2.min.css">
 @endpush
 @section('title')
-    Data Reimburshment
+    Data Vehicle Loan
 @endsection
 @section('main')
     <!-- detail Modal -->
@@ -17,7 +17,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="imageModalLabel">Reimburshment Details</h5>
+                    <h5 class="modal-title" id="imageModalLabel">Vehicle Loan Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
@@ -38,13 +38,13 @@
             </div>
         </div>
     </div>
-    {{-- <!-- Edit Reimburshment Popup Model -->
+    {{-- <!-- Edit Vehicle Loan Popup Model -->
     <div class="edit-reimburshment modal fade" id="vertical-center-scroll-modal" tabindex="-1"
         aria-labelledby="vertical-center-modal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <form class="form-horizontal form-material" id="form_update_reimburshment"
-                    action="{{ route('reimburshment.store') }}" method="POST" data-modal="dd-reimburshment">
+                    action="{{ route('vehicle-loan.store') }}" method="POST" data-modal="dd-reimburshment">
                     <div class="modal-header d-flex align-items-center">
                         <h4 class="modal-title" id="myLargeModalLabel">
                             Vertically centered scrollable Modal
@@ -60,10 +60,10 @@
                                 <input type="date" name="date_of_submission" class="form-control date_edit"
                                     placeholder="date of submission" />
                             </div>
-                            <label>Reimburshment Name</label>
+                            <label>Vehicle Loan Name</label>
                             <div class="col-md-12 mb-3">
                                 <input type="text" name="reimburshment_name" class="form-control reimburshment_name_edit"
-                                    placeholder="Reimburshment Name" />
+                                    placeholder="Vehicle Loan Name" />
                             </div>
                             <label>Description</label>
                             <div class="col-md-12 mb-3">
@@ -108,10 +108,10 @@
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
                 <div class="col-9">
-                    <h4 class="fw-semibold mb-8">Data Reimburshment</h4>
+                    <h4 class="fw-semibold mb-8">Data Vehicle Loan</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item" aria-current="page">Reimburshment</li>
+                            <li class="breadcrumb-item" aria-current="page">Vehicle Loan</li>
                         </ol>
                     </nav>
                 </div>
@@ -130,28 +130,28 @@
                     <div class="card-body">
                         <div class="mb-2">
                             <h5 class="card-title">
-                                {{ auth()->user()->hasRoles('staff') ? 'Your Reimburshment' : 'Staff\'s Reimburshment Request' }}
+                                {{ auth()->user()->hasRoles('admin') ? 'Your Vehicle Loan' : 'Staff\'s Vehicle Loan Request' }}
                             </h5>
                         </div>
                         <div class="d-flex justify-content-end">
-                            @if (auth()->user()->hasRoles('staff'))
+                            @if (auth()->user()->hasRoles('admin'))
                                 <button type="button" class="btn btn-info btn-rounded m-t-10 mb-2" data-bs-toggle="modal"
                                     data-bs-target=".add-reimburshment">
-                                    Add New Reimburshment
+                                    Add New Vehicle Loan
                                 </button>
                             @endif
                         </div>
-                        <!-- Add Reimburshment Popup Model -->
+                        <!-- Add Vehicle Loan Popup Model -->
                         <div id="scroll-long-outer-modal" class="modal fade in add-reimburshment" tabindex="-1"
                             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                 <div class="modal-content">
-                                    <form class="form-horizontal form-material" id="form_store_reimburshment"
-                                        action="{{ route('reimburshment.store') }}" method="POST"
+                                    <form class="form-horizontal form-material" id="form_store_vehicle-loan"
+                                        action="{{ route('vehicle-loan.store') }}" method="POST"
                                         data-modal="dd-reimburshment">
                                         <div class="modal-header d-flex align-items-center">
                                             <h4 class="modal-title" id="myModalLabel">
-                                                Add New Reimburshment
+                                                Add New Vehicle Loan
                                             </h4>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
@@ -165,10 +165,10 @@
                                                     <input type="date" name="date_of_submission" class="form-control"
                                                         placeholder="date of submission" />
                                                 </div>
-                                                <label>Reimburshment Name</label>
+                                                <label>Vehicle Loan Name</label>
                                                 <div class="col-md-12 mb-3">
                                                     <input type="text" name="reimburshment_name" class="form-control"
-                                                        placeholder="Reimburshment Name" />
+                                                        placeholder="Vehicle Loan Name" />
                                                 </div>
                                                 <label>Description</label>
                                                 <div class="col-md-12 mb-3">
@@ -214,15 +214,15 @@
                                     <!-- start row -->
                                     <tr>
                                         <th>No</th>
-                                        @if (!auth()->user()->hasRoles('staff'))
-                                            <th>NIP</th>
+                                        @if (!auth()->user()->hasRoles('admin'))
+                                            <th>Username</th>
                                             <th>Name</th>
                                             <th>Position</th>
                                         @endif
-                                        <th>Submission Date</th>
-                                        <th>Reimburshment Name</th>
+                                        <th>Stakeholder Name</th>
+                                        <th>Vehicle Name</th>
                                         <th>Status</th>
-                                        <th>Detail</th>
+                                        <th>Notes</th>
                                         <th>Action</th>
                                     </tr>
                                     <!-- end row -->
@@ -252,16 +252,16 @@
                 maxHeight: null, // set maximum height of editor
                 focus: false, // set focus to editable area after initializing summernote
             });
-            $('#form_store_reimburshment').submit(function(e) {
+            $('#form_store_vehicle-loan').submit(function(e) {
                 e.preventDefault();
                 // alert($(this).data('modal'))
 
                 let form = $(this);
-                var form_data = new FormData($('#form_store_reimburshment')[0]);
+                // var form_data = new FormData($('#form_store_vehicle-loan')[0]);
                 var arr_params = {
                     url: form.attr('action'),
                     method: 'POST',
-                    input: form_data,
+                    input: form.serialize(),
                     forms: form[0],
                     modal: $('.' + form.data('modal')).modal('hide'),
                     reload: false,
@@ -271,17 +271,17 @@
                 ajaxSaveDatas(arr_params)
                 $('.editor').summernote('code', '');
             });
-            const isStaff = "{{ auth()->user()->hasRoles('staff') }}";
+            const isStaff = "{{ auth()->user()->hasRoles('admin') }}";
             const isDirektur = "{{ auth()->user()->hasRoles('direktur') }}";
             const isFinance = "{{ auth()->user()->hasRoles('finance') }}";
             var dataColumns = [{
                     data: 'id'
                 },
                 {
-                    data: 'date_of_submission'
+                    data: 'stakeholder.name'
                 },
                 {
-                    data: 'reimburshment_name'
+                    data: 'vehicle.name'
                 },
                 {
                     data: 'status'
@@ -386,10 +386,10 @@
                         data: 'user.job_title'
                     },
                     {
-                        data: 'date_of_submission'
+                        data: 'stakeholder.name'
                     },
                     {
-                        data: 'reimburshment_name'
+                        data: 'vehicle.name'
                     },
                     {
                         data: 'status'
@@ -405,7 +405,7 @@
             }
             var arrayParams = {
                 idTable: '#table-1',
-                urlAjax: "{{ route('reimburshment.get-data') }}",
+                urlAjax: "{{ route('vehicle-loan.get-data') }}",
                 columns: dataColumns,
                 defColumn: columnDef,
 
@@ -453,7 +453,7 @@
                     let token = $(this).data('token');
                     let id = $(this).data('id');
                     var arr_params = {
-                        url: "{{ route('reimburshment.update-status') }}",
+                        url: "{{ route('vehicle-loan.update-status') }}",
                         method: 'POST',
                         input: {
                             "_token": token,

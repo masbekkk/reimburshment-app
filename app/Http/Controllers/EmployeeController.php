@@ -17,7 +17,7 @@ class EmployeeController extends Controller
     public function getEmployees()
     {
         try {
-            $roleNames = ['staff', 'finance'];
+            $roleNames = ['admin', 'stakeholder'];
             $usersWithRoles = User::with('roles')->whereHas('roles', function ($query) use ($roleNames) {
                 $query->whereIn('name', $roleNames);
             })->orWhereDoesntHave('roles')->with('roles')->get();
@@ -51,10 +51,10 @@ class EmployeeController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'integer', 'unique:' . User::class],
+                'username' => ['required', 'string', 'unique:' . User::class],
                 'job_title' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Password::defaults()],
-                'role' => 'required|in:finance,staff',
+                'role' => 'required|in:stakeholder,admin',
             ]);
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
@@ -62,7 +62,7 @@ class EmployeeController extends Controller
 
             $user = new User();
             $user->name = $request->name;
-            $user->nip = $request->nip;
+            $user->username = $request->username;
             $user->job_title = $request->job_title;
             $user->password = Hash::make($request->password);
             $user->save();
@@ -101,9 +101,9 @@ class EmployeeController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:255'],
-                'nip' => ['required', 'integer'],
+                'username' => ['required', 'string'],
                 'job_title' => ['required', 'string', 'max:255'],
-                'role' => 'required|in:finance,staff',
+                'role' => 'required|in:stakeholder,admin',
             ] + ($request->filled('password') ? ['password' => ['required', 'confirmed', Password::defaults()]] : []));
 
             if ($validator->fails()) {
@@ -111,7 +111,7 @@ class EmployeeController extends Controller
             }
             $user = User::findOrFail($id);
             $user->name = $request->name;
-            $user->nip = $request->nip;
+            $user->username = $request->username;
             $user->job_title = $request->job_title;
             if($request->filled('password'))
             $user->password = Hash::make($request->password);

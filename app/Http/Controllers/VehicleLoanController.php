@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReimburshmentRequest;
+use App\Http\Requests\VehicleLoanRequest;
 use App\Models\VehicleLoan;
-use App\Models\User;
 use App\Models\Vehicle;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
 class VehicleLoanController extends Controller
@@ -26,9 +24,9 @@ class VehicleLoanController extends Controller
     {
         try {
             if (!auth()->user()->hasRoles('admin')) {
-                $vehicleLoan = VehicleLoan::with('user')->orderBy('id', 'ASC')->get();
+                $vehicleLoan = VehicleLoan::with('user', 'stakeholder', 'vehicle')->orderBy('id', 'ASC')->get();
             }else {
-                $vehicleLoan = VehicleLoan::with('user')->where('user_id', auth()->user()->id)->orderBy('id', 'ASC')->get();
+                $vehicleLoan = VehicleLoan::with('user', 'stakeholder', 'vehicle')->where('user_id', auth()->user()->id)->orderBy('id', 'ASC')->get();
             }
            
             return response()->json([
@@ -70,13 +68,14 @@ class VehicleLoanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ReimburshmentRequest $request)
+    public function store(VehicleLoanRequest $request)
     {
         try {
             $vehicleLoan = new VehicleLoan();
 
             $vehicleLoan->notes = $request->notes;
             $vehicleLoan->vehicle_id = $request->vehicle_id;
+            $vehicleLoan->stakeholder_id = $request->stakeholder_id;
             $vehicleLoan->user_id = auth()->user()->id;
             $vehicleLoan->save();
 
@@ -128,6 +127,7 @@ class VehicleLoanController extends Controller
             // $vehicleLoan = VehicleLoan::findOrFail($vehicleLoan->id);
             $vehicleLoan->notes = $request->notes;
             $vehicleLoan->vehicle_id = $request->vehicle_id;
+            $vehicleLoan->stakeholder_id = $request->stakeholder_id;
             $vehicleLoan->user_id = auth()->user()->id;
             $vehicleLoan->update();
 

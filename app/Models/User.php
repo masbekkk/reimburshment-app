@@ -55,8 +55,13 @@ class User extends Authenticatable
         return $this->hasAnyPermission($permission);
     }
 
-    public function reimburshment()
+    public function vehicle_loan()
     {
         return $this->hasMany(VehicleLoan::class, 'user_id', 'id');
+    }
+
+    public function vehicle_loan_stakeholder()
+    {
+        return $this->hasMany(VehicleLoan::class, 'stakeholder_id', 'id');
     }
 }

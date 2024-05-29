@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('vehicle_loan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->bigInteger('stakeholder_id')->unsigned();
             $table->foreignId('vehicle_id');
             $table->enum('status', ['on_progress', 'accept', 'reject', 'done'])->default('on_progress');
             $table->string('notes')->nullable();
+            $table->foreign('stakeholder_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
