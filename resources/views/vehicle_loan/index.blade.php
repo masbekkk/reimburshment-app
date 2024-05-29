@@ -38,72 +38,6 @@
             </div>
         </div>
     </div>
-    {{-- <!-- Edit Vehicle Loan Popup Model -->
-    <div class="edit-reimburshment modal fade" id="vertical-center-scroll-modal" tabindex="-1"
-        aria-labelledby="vertical-center-modal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <form class="form-horizontal form-material" id="form_update_reimburshment"
-                    action="{{ route('vehicle-loan.store') }}" method="POST" data-modal="dd-reimburshment">
-                    <div class="modal-header d-flex align-items-center">
-                        <h4 class="modal-title" id="myLargeModalLabel">
-                            Vertically centered scrollable Modal
-                        </h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                        @csrf
-                        <div class="form-group">
-                            <label>Date Of Submission</label>
-                            <div class="col-md-12 mb-3">
-                                <input type="date" name="date_of_submission" class="form-control date_edit"
-                                    placeholder="date of submission" />
-                            </div>
-                            <label>Vehicle Loan Name</label>
-                            <div class="col-md-12 mb-3">
-                                <input type="text" name="reimburshment_name" class="form-control reimburshment_name_edit"
-                                    placeholder="Vehicle Loan Name" />
-                            </div>
-                            <label>Description</label>
-                            <div class="col-md-12 mb-3">
-                                <textarea name="description" class="description_edit editor"></textarea>
-                            </div>
-                            <label>Support File</label>
-                            <span class="badge bg-warning">*Upload
-                                Support File Only When you Wanna Change the Support File</span>
-                            <small>
-                                <p class="mb-0">Previous Support File:</p>
-                            </small>
-                            <div class="detail_support_file_edit mt-0 mb-3"></div>
-                            <div class="col-md-12 mb-3">
-                                <div
-                                    class="
-                            fileupload
-                            btn btn-danger btn-rounded
-                            waves-effect waves-light
-                            btn-sm
-                            ">
-                                    <span><i class="ion-upload m-r-5"></i>Upload
-                                        Support File</span>
-                                    <input type="file" class="upload" name="support_file" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-info waves-effect" data-bs-dismiss="modal">
-                            Save
-                        </button>
-                        <button type="button" class="btn btn-default waves-effect" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> --}}
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
@@ -160,34 +94,25 @@
 
                                             @csrf
                                             <div class="form-group">
-                                                <label>Date Of Submission</label>
+                                                <label>Stakeholder Name</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="date" name="date_of_submission" class="form-control"
-                                                        placeholder="date of submission" />
+                                                    <select class="form-select update_status" name="status" required>
+                                                        <option value="">Choose Stakeholder....</option>
+                                                        @foreach ($stakeholders as $stakeholder)
+                                                        <option value="{{ $stakeholder->id}}">{{ $stakeholder->name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                                <label>Vehicle Loan Name</label>
+                                                <label>Vehicle Name</label>
                                                 <div class="col-md-12 mb-3">
                                                     <input type="text" name="reimburshment_name" class="form-control"
                                                         placeholder="Vehicle Loan Name" />
                                                 </div>
-                                                <label>Description</label>
+                                                <label>Notes</label>
                                                 <div class="col-md-12 mb-3">
                                                     <textarea name="description" class="editor"></textarea>
                                                 </div>
-                                                <label>Support File</label>
-                                                <div class="col-md-12 mb-3">
-                                                    <div
-                                                        class="
-                                              fileupload
-                                              btn btn-danger btn-rounded
-                                              waves-effect waves-light
-                                              btn-sm
-                                            ">
-                                                        <span><i class="ion-upload m-r-5"></i>Upload
-                                                            Support File</span>
-                                                        <input type="file" class="upload" name="support_file" />
-                                                    </div>
-                                                </div>
+
                                             </div>
 
                                         </div>

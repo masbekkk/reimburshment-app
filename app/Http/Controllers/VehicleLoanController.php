@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VehicleLoanRequest;
+use App\Models\User;
 use App\Models\VehicleLoan;
 use App\Models\Vehicle;
 use Exception;
@@ -54,7 +55,10 @@ class VehicleLoanController extends Controller
      */
     public function index()
     {
-        return view('vehicle_loan.index');
+        $stakeholders = User::with('roles')->whereHas('roles', function ($query) {
+            $query->where('name', 'stakeholder');
+        })->get();
+        return view('vehicle_loan.index', compact('stakeholders'));
     }
 
     /**
