@@ -22,6 +22,8 @@ class VehicleLoanRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'stakeholder_id' => 'required|integer',
+            'vehicle_id' => 'required|integer',
             'status' => 'nullable|in:on_progress,accept,reject',
             'notes' => 'nullable|string|max:255',
         ];

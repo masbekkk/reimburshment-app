@@ -96,17 +96,23 @@
                                             <div class="form-group">
                                                 <label>Stakeholder Name</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <select class="form-select update_status" name="status" required>
+                                                    <select class="form-control select2" name="stakeholder_id" required>
                                                         <option value="">Choose Stakeholder....</option>
                                                         @foreach ($stakeholders as $stakeholder)
-                                                        <option value="{{ $stakeholder->id}}">{{ $stakeholder->name }}</option>
+                                                            <option value="{{ $stakeholder->id }}">{{ $stakeholder->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <label>Vehicle Name</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="text" name="reimburshment_name" class="form-control"
-                                                        placeholder="Vehicle Loan Name" />
+                                                    <select class="form-control select2" name="vehicle_id" required>
+                                                        <option value="">Choose Vehicle....</option>
+                                                        @foreach ($vehicles as $vehicle)
+                                                            <option value="{{ $vehicle->id }}">{{ $vehicle->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                                 <label>Notes</label>
                                                 <div class="col-md-12 mb-3">
@@ -182,6 +188,7 @@
                 // alert($(this).data('modal'))
 
                 let form = $(this);
+                console.log(form.serialize())
                 // var form_data = new FormData($('#form_store_vehicle-loan')[0]);
                 var arr_params = {
                     url: form.attr('action'),
@@ -190,8 +197,6 @@
                     forms: form[0],
                     modal: $('.' + form.data('modal')).modal('hide'),
                     reload: false,
-                    processData: false,
-                    contentType: false,
                 }
                 ajaxSaveDatas(arr_params)
                 $('.editor').summernote('code', '');
@@ -264,7 +269,7 @@
                                  data-description="${full.description}" data-support_file="${full.support_file}" data-url="/project/${data}"
                                  title="Edit"><i class="fas fa-edit"></i></a>
                               <a class="btn btn-danger btn-lg ml-1"
-                                 href="#deleteData" data-delete-url="/reimburshment/${data}" 
+                                 href="#deleteData" data-delete-url="/vehicle-loan/${data}" 
                                  onclick="return deleteConfirm(this,'delete')"
                                  title="Delete"><i class="fas fa-trash"></i></a>
                            </div>

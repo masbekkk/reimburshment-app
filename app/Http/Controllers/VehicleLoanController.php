@@ -38,7 +38,7 @@ class VehicleLoanController extends Controller
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
            
-            Log::error('Error retrieve reimburshment data: ' . $errorMessage );
+            Log::error('Error retrieve vehicle loan data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to retrieve',
@@ -58,7 +58,8 @@ class VehicleLoanController extends Controller
         $stakeholders = User::with('roles')->whereHas('roles', function ($query) {
             $query->where('name', 'stakeholder');
         })->get();
-        return view('vehicle_loan.index', compact('stakeholders'));
+        $vehicles = Vehicle::all();
+        return view('vehicle_loan.index', compact('stakeholders', 'vehicles'));
     }
 
     /**
@@ -92,7 +93,7 @@ class VehicleLoanController extends Controller
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
            
-            Log::error('Error store reimburshment data: ' . $errorMessage );
+            Log::error('Error store vehicle loan data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to store',
@@ -143,7 +144,7 @@ class VehicleLoanController extends Controller
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
            
-            Log::error('Error store reimburshment data: ' . $errorMessage );
+            Log::error('Error store vehicle loan data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to update',
@@ -169,7 +170,7 @@ class VehicleLoanController extends Controller
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
            
-            Log::error('Error delete reimburshment data: ' . $errorMessage );
+            Log::error('Error delete vehicle loan data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to delete',
@@ -181,7 +182,7 @@ class VehicleLoanController extends Controller
 
 
     /**
-     * Update reimburshment status
+     * Update vehicle loan status
      */
     public function updateStatus(Request $request)
     {
@@ -205,7 +206,7 @@ class VehicleLoanController extends Controller
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
            
-            Log::error('Error Status Updated reimburshment data: ' . $errorMessage );
+            Log::error('Error Status Updated vehicle loan data: ' . $errorMessage );
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to Status Updated',
