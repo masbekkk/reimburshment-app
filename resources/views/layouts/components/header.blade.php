@@ -9,7 +9,7 @@
         </ul>
 
         <div class="d-block d-lg-none">
-            <text>Reimburshment App</text>
+            <text>Vehicle Loan App</text>
             {{-- <img src="../../dist/images/logos/dark-logo.svg" class="dark-logo" width="180" alt="" />
             <img src="../../dist/images/logos/light-logo.svg" class="light-logo" width="180" alt="" /> --}}
         </div>

@@ -19,8 +19,8 @@ class RolePermissionSeeder extends Seeder
         $staff = Role::create(['name' => 'admin']);
         $super_admin = Role::create(['name' => 'super admin']);
 
-        $crudReimburshment = Permission::create(['name' => 'crud reimburshment']);
-        $editStatusReimburshment = Permission::create(['name' => 'edit status reimburshment']);
+        $crudReimburshment = Permission::create(['name' => 'crud vehicle loan']);
+        $editStatusReimburshment = Permission::create(['name' => 'edit status vehicle loan']);
         $createStaffAccount = Permission::create(['name' => 'create staff account']);
         $editStaffAccount = Permission::create(['name' => 'edit staff account']);
         $deleteStaffAccount = Permission::create(['name' => 'delete staff account']);

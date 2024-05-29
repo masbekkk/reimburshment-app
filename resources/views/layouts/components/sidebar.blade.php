@@ -3,7 +3,7 @@
     <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
             <a href="./index.html" class="text-nowrap logo-img">
-                <text>Reimburshment App</text>
+                <text>Vehicle Loan App</text>
                 {{-- <img src="../../dist/images/logos/dark-logo.svg" class="dark-logo" width="180" alt="" />
                 <img src="../../dist/images/logos/light-logo.svg" class="light-logo" width="180" alt="" /> --}}
             </a>
@@ -21,14 +21,14 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ route('reimburshment.index')}}" aria-expanded="false">
+                    <a class="sidebar-link" href="{{ route('vehicle-loan.index')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-currency-dollar"></i>
                         </span>
-                        <span class="hide-menu">Reimburshment</span>
+                        <span class="hide-menu">Vehicle Loan</span>
                     </a>
                 </li>
-                @if(auth()->user()->hasPermission('create staff account'))
+                @if(auth()->user()->hasPermission('create admin account'))
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('employees.index')}}" aria-expanded="false">
                         <span>

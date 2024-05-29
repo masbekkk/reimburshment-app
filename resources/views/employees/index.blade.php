@@ -63,10 +63,10 @@
 
                                             @csrf
                                             <div class="form-group">
-                                                <label>NIP</label>
+                                                <label>Username</label>
                                                 <div class="col-md-12 mb-3">
-                                                    <input type="number" name="nip" class="form-control"
-                                                        placeholder="NIP" required />
+                                                    <input type="number" name="username" class="form-control"
+                                                        placeholder="Username" required />
                                                 </div>
                                                 <label>Employees Name</label>
                                                 <div class="col-md-12 mb-3">
@@ -123,7 +123,7 @@
                                     <!-- start row -->
                                     <tr>
                                         <th>No</th>
-                                        <th>NIP</th>
+                                        <th>Username</th>
                                         <th>Name</th>
                                         <th>Position</th>
                                         <th>Roles User</th>
@@ -170,7 +170,7 @@
                     data: 'id'
                 },
                 {
-                    data: 'nip'
+                    data: 'username'
                 },
                 {
                     data: 'name'
@@ -195,10 +195,10 @@
                 {
                     targets: [4],
                     render: function(data, type, full, meta) {
-                        if (data == 'staff') {
-                            return `<span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-circle fs-4"></i>Staff</span>`
-                        } else if (data == 'finance') {
-                            return `<span class="badge bg-light-success rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-circle fs-4"></i>Finance</span>`
+                        if (data == 'admin') {
+                            return `<span class="badge bg-light-primary rounded-3 py-2 text-primary fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-circle fs-4"></i>Admin</span>`
+                        } else if (data == 'stakeholder') {
+                            return `<span class="badge bg-light-success rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1"><i class="ti ti-circle fs-4"></i>Stakeholder</span>`
                         }
                     }
                 },

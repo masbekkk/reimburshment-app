@@ -3,15 +3,15 @@
 
 <head>
     <!--  Title -->
-    <title>Reimburshment App | @yield('title')</title>
+    <title>Vehicle Loan App | @yield('title')</title>
     <!--  Required Meta Tag -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="handheldfriendly" content="true" />
     <meta name="MobileOptimized" content="width" />
-    <meta name="description" content="Reimburshment App" />
+    <meta name="description" content="Vehicle Loan App" />
     <meta name="author" content="" />
-    <meta name="keywords" content="Reimburshment App" />
+    <meta name="keywords" content="Vehicle Loan App" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--  Favicon -->

@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
         // return view('layouts.index');
     });
     Route::resource('vehicle-loan', VehicleLoanController::class);
-    Route::get('get-vehicle-loan', [VehicleLoanController::class, 'getReimburshment'])->name('vehicle-loan.get-data');
+    Route::get('get-vehicle-loan', [VehicleLoanController::class, 'getVehicleLoan'])->name('vehicle-loan.get-data');
     Route::post('vehicle-loan/update-status', [VehicleLoanController::class, 'updateStatus'])->name('vehicle-loan.update-status');
 
     Route::middleware('role:direktur')->group(function () {
