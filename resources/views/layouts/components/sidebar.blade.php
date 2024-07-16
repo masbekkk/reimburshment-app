@@ -39,7 +39,7 @@
                 </li>
                 @endif
                 @if(auth()->user()->hasPermission('crud role'))
-                <li class="sidebar-item">
+                <li class="sidebar-item  {{(Route::is('roles.index') ? 'active' : '')}}">
                     <a class="sidebar-link" href="{{ route('roles.index')}}" aria-expanded="false">
                         <span>
                             <i class="ti ti-briefcase"></i>
